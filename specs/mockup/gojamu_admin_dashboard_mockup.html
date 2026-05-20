@@ -1,0 +1,315 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',Inter,system-ui,sans-serif;font-size:13px}
+:root{
+  --g950:#1A4D2E;--g700:#2D7A4F;--g500:#3E9B64;--g300:#6DBF8A;--g100:#C5EDD4;--g50:#EDF7F1;
+  --gold9:#7A4A00;--gold5:#E8A800;--gold3:#FACA3B;--gold1:#FDE8A0;--gold0:#FDF6E3;
+  --maha:#C4365E;--mahalt:#FDE6EE;--nirla:#1A6BAF;--nirlt:#E3F4FC;
+  --gray7:#4B5249;--gray5:#8A9187;--gray2:#C8CFC6;--gray1:#F0F2EF;
+  --white:#FAFBF9;
+}
+.shell{display:flex;height:580px;background:var(--gray1);border-radius:12px;overflow:hidden;border:1px solid #ccc}
+
+/* SIDEBAR */
+.sidebar{width:200px;background:var(--g950);display:flex;flex-direction:column;flex-shrink:0}
+.logo-area{padding:16px 14px 12px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.logo-text{color:#fff;font-size:15px;font-weight:700;letter-spacing:-0.3px}
+.logo-sub{color:var(--g300);font-size:10px;margin-top:1px}
+.nav-section{font-size:9px;color:var(--g300);font-weight:600;letter-spacing:0.08em;padding:14px 14px 4px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 14px;color:rgba(255,255,255,0.65);font-size:12px;cursor:pointer;border-left:3px solid transparent;transition:all 0.15s}
+.nav-item i{font-size:15px;width:16px}
+.nav-item.active{background:var(--g700);color:#fff;border-left-color:var(--gold3)}
+.nav-item:hover:not(.active){background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.85)}
+.nav-badge{margin-left:auto;background:var(--gold5);color:var(--gold9);font-size:9px;font-weight:700;padding:1px 5px;border-radius:8px}
+.sidebar-bottom{margin-top:auto;padding:10px 14px;border-top:1px solid rgba(255,255,255,0.1)}
+.user-chip{display:flex;align-items:center;gap:8px}
+.avatar-sm{width:26px;height:26px;border-radius:50%;background:var(--g700);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;flex-shrink:0}
+.user-name{color:rgba(255,255,255,0.8);font-size:11px;font-weight:500}
+.user-role{color:var(--g300);font-size:9px}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--white);border-bottom:1px solid var(--g100);flex-shrink:0}
+.breadcrumb{font-size:11px;color:var(--gray5)}
+.breadcrumb span{color:var(--g700);font-weight:600}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.search-box{display:flex;align-items:center;gap:6px;background:var(--g50);border:1px solid var(--g100);border-radius:7px;padding:4px 10px}
+.search-box i{font-size:14px;color:var(--gray5)}
+.search-box input{border:none;background:transparent;outline:none;font-size:12px;color:var(--gray7);width:110px;font-family:inherit}
+.bell-btn{position:relative;background:none;border:none;cursor:pointer;padding:4px;color:var(--gray7)}
+.bell-btn i{font-size:18px}
+.bell-dot{position:absolute;top:2px;right:2px;width:8px;height:8px;border-radius:50%;background:#E24B4A;border:1.5px solid var(--white)}
+.content{flex:1;overflow-y:auto;padding:14px 16px;background:var(--g50)}
+
+/* METRIC CARDS */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.metric-card{background:var(--white);border:1px solid var(--g100);border-radius:10px;padding:10px 12px}
+.metric-label{font-size:10px;color:var(--gray5);font-weight:500;margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.metric-label i{font-size:13px}
+.metric-value{font-size:22px;font-weight:700;color:var(--g950);line-height:1.1}
+.metric-sub{font-size:10px;color:var(--g500);margin-top:2px}
+.metric-card.gold .metric-value{color:var(--gold9)}
+.metric-card.gold{border-top:3px solid var(--gold5)}
+.metric-card.green{border-top:3px solid var(--g500)}
+.metric-card.warn .metric-value{color:#B45309}
+.metric-card.warn{border-top:3px solid #E8A800}
+.metric-card.red .metric-value{color:#991B1B}
+.metric-card.red{border-top:3px solid #E24B4A}
+
+/* ROW 2 */
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.card{background:var(--white);border:1px solid var(--g100);border-radius:10px;padding:10px 12px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.card-title{font-size:12px;font-weight:600;color:var(--g950)}
+.see-all{font-size:10px;color:var(--g700);cursor:pointer;font-weight:500}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{font-size:10px;font-weight:600;color:var(--gray5);text-align:left;padding:5px 8px;border-bottom:1px solid var(--g100)}
+.data-table td{font-size:11px;color:var(--gray7);padding:5px 8px;border-bottom:0.5px solid var(--g50)}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--g50)}
+
+/* STATUS BADGES */
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:9px;font-weight:600;white-space:nowrap}
+.badge-paid{background:#DBEAFE;color:#1D4ED8}
+.badge-processing{background:#EDE9FE;color:#5B21B6}
+.badge-shipped{background:#E0F2FE;color:#0369A1}
+.badge-completed{background:#DCFCE7;color:#166534}
+.badge-pending{background:#FDF3DC;color:#B45309}
+.badge-cancelled{background:#FEE2E2;color:#991B1B}
+
+/* PRODUCT CHIP */
+.prod-chip{display:inline-flex;align-items:center;gap:3px;padding:1px 6px;border-radius:20px;font-size:9px;font-weight:600}
+.prod-mahakunir{background:var(--mahalt);color:var(--maha)}
+.prod-nirlawa{background:var(--nirlt);color:var(--nirla)}
+.prod-koganti{background:var(--g100);color:var(--g700)}
+
+/* STOCK LIST */
+.stock-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:0.5px solid var(--g50)}
+.stock-row:last-child{border-bottom:none}
+.stock-prod{font-size:11px;font-weight:500;color:var(--g950);flex:1}
+.stock-bar-wrap{width:80px;height:5px;background:var(--g100);border-radius:3px;overflow:hidden}
+.stock-bar{height:100%;border-radius:3px}
+.stock-num{font-size:10px;color:var(--gray5);min-width:40px;text-align:right}
+
+/* POINT AREA */
+.point-row{display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--g50)}
+.point-row:last-child{border-bottom:none}
+.reseller-dot{width:20px;height:20px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:var(--g700)}
+.point-name{font-size:11px;color:var(--g950);font-weight:500;flex:1;margin-left:6px}
+.point-badge{background:var(--gold1);color:var(--gold9);font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px}
+
+/* QUICK ACTIONS */
+.row3{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.action-btn{background:var(--white);border:1px solid var(--g100);border-radius:10px;padding:10px;display:flex;flex-direction:column;align-items:flex-start;gap:5px;cursor:pointer}
+.action-btn:hover{border-color:var(--g300);background:var(--g50)}
+.action-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.action-icon i{font-size:15px}
+.action-label{font-size:11px;font-weight:600;color:var(--g950)}
+.action-desc{font-size:9px;color:var(--gray5)}
+
+/* TAB BAR */
+.tab-bar{display:flex;gap:2px;margin-bottom:8px}
+.tab{padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;color:var(--gray5);font-weight:500}
+.tab.active{background:var(--g700);color:#fff}
+</style>
+
+<h2 class="sr-only">GoJamu Admin Dashboard — mockup desain sistem manajemen reseller</h2>
+
+<p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:10px;">Mockup admin dashboard — layout React + Tailwind, brand colors GoJamu</p>
+
+<div class="shell">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="logo-area">
+      <div class="logo-text">🌿 GoJamu</div>
+      <div class="logo-sub">Reseller Management</div>
+    </div>
+    <div class="nav-section">Utama</div>
+    <div class="nav-item active"><i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard</div>
+    <div class="nav-item"><i class="ti ti-shopping-cart" aria-hidden="true"></i> Orders <span class="nav-badge">12</span></div>
+    <div class="nav-item"><i class="ti ti-users" aria-hidden="true"></i> Reseller</div>
+    <div class="nav-item"><i class="ti ti-box" aria-hidden="true"></i> Produk</div>
+    <div class="nav-section">Keuangan</div>
+    <div class="nav-item"><i class="ti ti-credit-card" aria-hidden="true"></i> Pembayaran <span class="nav-badge">5</span></div>
+    <div class="nav-item"><i class="ti ti-truck-delivery" aria-hidden="true"></i> Pengiriman</div>
+    <div class="nav-section">Program</div>
+    <div class="nav-item"><i class="ti ti-star" aria-hidden="true"></i> Reward</div>
+    <div class="nav-item"><i class="ti ti-coin" aria-hidden="true"></i> Point</div>
+    <div class="nav-section">Laporan</div>
+    <div class="nav-item"><i class="ti ti-chart-bar" aria-hidden="true"></i> Laporan</div>
+    <div class="nav-item"><i class="ti ti-settings" aria-hidden="true"></i> Pengaturan</div>
+    <div class="sidebar-bottom">
+      <div class="user-chip">
+        <div class="avatar-sm">SA</div>
+        <div><div class="user-name">Super Admin</div><div class="user-role">GoJamu HQ</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN AREA -->
+  <div class="main">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="breadcrumb">Admin / <span>Dashboard</span></div>
+      <div class="topbar-right">
+        <div class="search-box"><i class="ti ti-search" aria-hidden="true"></i><input placeholder="Cari order, reseller…" readonly /></div>
+        <button class="bell-btn" aria-label="Notifikasi — 3 belum dibaca"><i class="ti ti-bell" aria-hidden="true"></i><span class="bell-dot"></span></button>
+        <div class="avatar-sm" style="width:28px;height:28px;font-size:11px;background:var(--g500)">AD</div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- METRIC CARDS -->
+      <div class="metrics">
+        <div class="metric-card green">
+          <div class="metric-label"><i class="ti ti-shopping-bag" aria-hidden="true"></i> Order hari ini</div>
+          <div class="metric-value">24</div>
+          <div class="metric-sub">↑ 6 dari kemarin</div>
+        </div>
+        <div class="metric-card gold">
+          <div class="metric-label"><i class="ti ti-cash" aria-hidden="true"></i> Omzet bulan ini</div>
+          <div class="metric-value">48,2 jt</div>
+          <div class="metric-sub">↑ 12% dari bulan lalu</div>
+        </div>
+        <div class="metric-card warn">
+          <div class="metric-label"><i class="ti ti-clock" aria-hidden="true"></i> Pending payment</div>
+          <div class="metric-value">5</div>
+          <div class="metric-sub">Menunggu verifikasi</div>
+        </div>
+        <div class="metric-card red">
+          <div class="metric-label"><i class="ti ti-gift" aria-hidden="true"></i> Redeem pending</div>
+          <div class="metric-value">3</div>
+          <div class="metric-sub">Perlu diproses admin</div>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS -->
+      <div class="row3">
+        <div class="action-btn">
+          <div class="action-icon" style="background:var(--g100)"><i class="ti ti-check" style="color:var(--g700)" aria-hidden="true"></i></div>
+          <div class="action-label">Verifikasi Bayar</div>
+          <div class="action-desc">5 bukti menunggu</div>
+        </div>
+        <div class="action-btn">
+          <div class="action-icon" style="background:var(--gold1)"><i class="ti ti-printer" style="color:var(--gold9)" aria-hidden="true"></i></div>
+          <div class="action-label">Cetak Invoice</div>
+          <div class="action-desc">Order Paid siap cetak</div>
+        </div>
+        <div class="action-btn">
+          <div class="action-icon" style="background:var(--nirlt)"><i class="ti ti-truck-delivery" style="color:var(--nirla)" aria-hidden="true"></i></div>
+          <div class="action-label">Input Resi</div>
+          <div class="action-desc">7 order packed</div>
+        </div>
+        <div class="action-btn">
+          <div class="action-icon" style="background:var(--mahalt)"><i class="ti ti-user-plus" style="color:var(--maha)" aria-hidden="true"></i></div>
+          <div class="action-label">Tambah Reseller</div>
+          <div class="action-desc">Daftar reseller baru</div>
+        </div>
+      </div>
+
+      <!-- ROW 2 -->
+      <div class="row2">
+        <!-- ORDER TABLE -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="ti ti-shopping-cart" style="font-size:14px;vertical-align:-2px;margin-right:5px;color:var(--g700)" aria-hidden="true"></i>Order Terbaru</div>
+            <div class="see-all">Lihat semua →</div>
+          </div>
+          <div class="tab-bar">
+            <div class="tab active">Semua</div>
+            <div class="tab">Pending</div>
+            <div class="tab">Paid</div>
+            <div class="tab">Shipped</div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Invoice</th><th>Reseller</th><th>Produk</th><th>Total</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr>
+                <td style="font-weight:600;color:var(--g700);font-size:10px">GJ-2026-00892</td>
+                <td>Siti R.</td>
+                <td><span class="prod-chip prod-mahakunir">Mahakunir</span></td>
+                <td style="font-weight:600">Rp 2,1jt</td>
+                <td><span class="badge badge-paid">Paid</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600;color:var(--g700);font-size:10px">GJ-2026-00891</td>
+                <td>Budi S.</td>
+                <td><span class="prod-chip prod-nirlawa">Nirlawa</span></td>
+                <td style="font-weight:600">Rp 3,8jt</td>
+                <td><span class="badge badge-shipped">Shipped</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600;color:var(--g700);font-size:10px">GJ-2026-00890</td>
+                <td>Dewi P.</td>
+                <td><span class="prod-chip prod-koganti">Ko Gan Ti</span></td>
+                <td style="font-weight:600">Rp 1,4jt</td>
+                <td><span class="badge badge-processing">Processing</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600;color:var(--g700);font-size:10px">GJ-2026-00889</td>
+                <td>Rina K.</td>
+                <td><span class="prod-chip prod-mahakunir">Mahakunir</span></td>
+                <td style="font-weight:600">Rp 5,6jt</td>
+                <td><span class="badge badge-completed">Completed</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600;color:var(--g700);font-size:10px">GJ-2026-00888</td>
+                <td>Andi H.</td>
+                <td><span class="prod-chip prod-nirlawa">Nirlawa</span></td>
+                <td style="font-weight:600">Rp 980rb</td>
+                <td><span class="badge badge-pending">Pending</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- STOK + POINT -->
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <!-- STOK -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="ti ti-box" style="font-size:14px;vertical-align:-2px;margin-right:5px;color:var(--g700)" aria-hidden="true"></i>Stok Produk</div>
+              <div class="see-all">Kelola stok →</div>
+            </div>
+            <div class="stock-row">
+              <div style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;background:var(--mahalt);color:var(--maha)">MHK</div>
+              <div class="stock-prod">Mahakunir</div>
+              <div class="stock-bar-wrap"><div class="stock-bar" style="width:78%;background:var(--g500)"></div></div>
+              <div class="stock-num">312 pcs</div>
+            </div>
+            <div class="stock-row">
+              <div style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;background:var(--nirlt);color:var(--nirla)">NRL</div>
+              <div class="stock-prod">Nirlawa</div>
+              <div class="stock-bar-wrap"><div class="stock-bar" style="width:45%;background:var(--gold5)"></div></div>
+              <div class="stock-num" style="color:#B45309">87 pcs</div>
+            </div>
+            <div class="stock-row">
+              <div style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;background:var(--g100);color:var(--g700)">KGT</div>
+              <div class="stock-prod">Ko Gan Ti</div>
+              <div class="stock-bar-wrap"><div class="stock-bar" style="width:18%;background:#E24B4A"></div></div>
+              <div class="stock-num" style="color:#991B1B">24 pcs ⚠</div>
+            </div>
+          </div>
+          <!-- TOP RESELLER POINT -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="ti ti-trophy" style="font-size:14px;vertical-align:-2px;margin-right:5px;color:var(--gold5)" aria-hidden="true"></i>Top Reseller (Point)</div>
+            </div>
+            <div class="point-row"><div class="reseller-dot">SR</div><div class="point-name">Siti Rahayu</div><div class="point-badge">248 pt</div></div>
+            <div class="point-row"><div class="reseller-dot">BP</div><div class="point-name">Budi Prasetya</div><div class="point-badge">195 pt</div></div>
+            <div class="point-row"><div class="reseller-dot">DK</div><div class="point-name">Dewi Kurnia</div><div class="point-badge">171 pt</div></div>
+            <div class="point-row"><div class="reseller-dot">RW</div><div class="point-name">Rina Wijaya</div><div class="point-badge">134 pt</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div>
+
+<p style="font-size:11px;color:var(--color-text-secondary);margin-top:8px;">↑ Mockup admin dashboard — sidebar herbal-950, header putih, konten herbal-50. Semua warna menggunakan CSS variables brand GoJamu yang sudah didefinisikan di tailwind.config.js</p>

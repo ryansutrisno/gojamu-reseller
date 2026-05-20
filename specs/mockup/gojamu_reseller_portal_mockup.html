@@ -1,0 +1,281 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g950:#1A4D2E;--g700:#2D7A4F;--g500:#3E9B64;--g300:#6DBF8A;--g100:#C5EDD4;--g50:#EDF7F1;
+  --gold9:#7A4A00;--gold5:#E8A800;--gold3:#FACA3B;--gold1:#FDE8A0;--gold0:#FDF6E3;
+  --maha:#C4365E;--mahalt:#FDE6EE;--nirla:#1A6BAF;--nirlt:#E3F4FC;
+  --gray7:#4B5249;--gray5:#8A9187;--gray1:#F0F2EF;--white:#FAFBF9;
+}
+.r-shell{display:flex;height:560px;background:var(--gray1);border-radius:12px;overflow:hidden;border:1px solid #ccc;font-family:'Plus Jakarta Sans',Inter,system-ui,sans-serif;font-size:13px}
+
+/* LEFT — mobile phone frame */
+.mobile-frame{width:230px;background:var(--g50);display:flex;flex-direction:column;border-right:1px solid var(--g100);flex-shrink:0}
+.mob-header{background:var(--g700);padding:10px 12px;display:flex;align-items:center;justify-content:space-between}
+.mob-logo{color:#fff;font-size:13px;font-weight:700}
+.mob-icons{display:flex;align-items:center;gap:6px;color:#fff}
+.mob-icons i{font-size:16px}
+.mob-badge{background:var(--gold3);color:var(--gold9);font-size:8px;font-weight:700;padding:0 4px;border-radius:6px;line-height:14px}
+.mob-content{flex:1;overflow-y:auto;padding:10px}
+
+/* GREETING CARD */
+.greet-card{background:linear-gradient(135deg,var(--g700),var(--g950));border-radius:10px;padding:12px;margin-bottom:10px;color:#fff}
+.greet-name{font-size:13px;font-weight:700}
+.greet-code{font-size:9px;color:var(--g300);margin-top:1px}
+.greet-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.gs-item{background:rgba(255,255,255,0.1);border-radius:7px;padding:7px 8px}
+.gs-val{font-size:16px;font-weight:700;color:var(--gold3)}
+.gs-lbl{font-size:9px;color:rgba(255,255,255,0.65)}
+
+/* POINT CARD */
+.point-card{background:var(--gold0);border:1px solid var(--gold1);border-radius:10px;padding:10px 12px;margin-bottom:10px}
+.point-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.point-title{font-size:11px;font-weight:600;color:var(--gold9)}
+.point-current{font-size:22px;font-weight:700;color:var(--gold9)}
+.point-unit{font-size:11px;font-weight:400;color:var(--gold9)}
+.reward-progress{margin-top:6px}
+.reward-lbl{font-size:9px;color:var(--gold9);margin-bottom:3px}
+.prog-bar-wrap{background:var(--gold1);border-radius:4px;height:6px;overflow:hidden}
+.prog-bar{height:100%;background:var(--gold5);border-radius:4px}
+.prog-hint{font-size:9px;color:var(--gray5);margin-top:2px}
+
+/* PRODUCT SECTION */
+.sec-title{font-size:11px;font-weight:600;color:var(--g950);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.sec-title i{font-size:13px;color:var(--g500)}
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.prod-card{background:var(--white);border:1px solid var(--g100);border-radius:8px;overflow:hidden;cursor:pointer}
+.prod-card:hover{border-color:var(--g300)}
+.prod-img{height:60px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.prod-img.maha{background:var(--mahalt)}
+.prod-img.nirl{background:var(--nirlt)}
+.prod-img.koga{background:var(--g50)}
+.prod-info{padding:6px}
+.prod-name{font-size:10px;font-weight:600;color:var(--g950);line-height:1.3}
+.prod-tag{font-size:8px;font-weight:600;padding:1px 5px;border-radius:6px;margin-top:2px;display:inline-block}
+.prod-price{font-size:10px;color:var(--g700);font-weight:600;margin-top:3px}
+.prod-stock{font-size:9px;color:var(--gray5)}
+
+/* ORDER LIST */
+.order-item{background:var(--white);border:1px solid var(--g100);border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.order-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.order-inv{font-size:9px;font-weight:600;color:var(--g700)}
+.order-date{font-size:9px;color:var(--gray5)}
+.order-prod{font-size:10px;color:var(--gray7);margin-bottom:3px}
+.order-bottom{display:flex;align-items:center;justify-content:space-between}
+.order-total{font-size:11px;font-weight:700;color:var(--g950)}
+.badge{display:inline-flex;align-items:center;padding:2px 6px;border-radius:20px;font-size:8px;font-weight:600}
+.badge-shipped{background:#E0F2FE;color:#0369A1}
+.badge-completed{background:#DCFCE7;color:#166534}
+.badge-pending{background:#FDF3DC;color:#B45309}
+.badge-paid{background:#DBEAFE;color:#1D4ED8}
+
+/* BOTTOM NAV (mobile) */
+.mob-bottom-nav{background:var(--white);border-top:1px solid var(--g100);display:flex;justify-content:space-around;padding:6px 0}
+.bnav-item{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--gray5);cursor:pointer;padding:0 8px;font-size:9px}
+.bnav-item i{font-size:18px}
+.bnav-item.active{color:var(--g700)}
+.bnav-item.active i{color:var(--g700)}
+
+/* RIGHT — desktop layout */
+.desktop-frame{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.desk-header{background:var(--white);padding:10px 14px;border-bottom:1px solid var(--g100);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.desk-tab-bar{display:flex;gap:2px}
+.desk-tab{padding:5px 10px;border-radius:7px;font-size:11px;font-weight:500;cursor:pointer;color:var(--gray5)}
+.desk-tab.active{background:var(--g700);color:#fff}
+.desk-content{flex:1;overflow-y:auto;padding:12px 14px;background:var(--g50)}
+
+/* CHECKOUT PANEL */
+.checkout-wrap{display:grid;grid-template-columns:1fr 280px;gap:10px}
+.cart-table{background:var(--white);border:1px solid var(--g100);border-radius:10px;overflow:hidden}
+.cart-head{background:var(--g50);border-bottom:1px solid var(--g100);padding:8px 12px;font-size:11px;font-weight:600;color:var(--g950)}
+.cart-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:0.5px solid var(--g50)}
+.cart-row:last-child{border-bottom:none}
+.cart-prod-name{flex:1;font-size:12px;font-weight:500;color:var(--g950)}
+.cart-sub-lbl{font-size:10px;color:var(--gray5)}
+.qty-ctrl{display:flex;align-items:center;gap:5px}
+.qty-btn{width:20px;height:20px;border-radius:5px;background:var(--g50);border:1px solid var(--g100);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--g700);font-weight:600}
+.qty-val{font-size:12px;font-weight:600;min-width:20px;text-align:center;color:var(--g950)}
+.cart-price{font-size:12px;font-weight:600;color:var(--g700);min-width:70px;text-align:right}
+
+/* SUMMARY PANEL */
+.summary-panel{background:var(--white);border:1px solid var(--g100);border-radius:10px;padding:12px;height:fit-content}
+.sum-title{font-size:12px;font-weight:600;color:var(--g950);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--g100)}
+.sum-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;font-size:12px}
+.sum-lbl{color:var(--gray5)}
+.sum-val{color:var(--g950);font-weight:500}
+.tier-highlight{background:var(--gold0);border:1px solid var(--gold1);border-radius:6px;padding:7px 10px;margin:8px 0}
+.tier-label{font-size:10px;color:var(--gold9);font-weight:500;margin-bottom:2px}
+.tier-val{font-size:14px;font-weight:700;color:var(--gold9)}
+.point-preview{background:var(--g50);border:1px solid var(--g100);border-radius:6px;padding:7px 10px;margin-bottom:10px;display:flex;align-items:center;gap:6px;font-size:11px;color:var(--g700)}
+.point-preview i{color:var(--gold5);font-size:15px}
+.checkout-btn{background:var(--g700);color:#fff;border:none;border-radius:8px;padding:10px;width:100%;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.checkout-btn:hover{background:var(--g950)}
+.divider-sum{border:none;border-top:1px solid var(--g100);margin:6px 0}
+</style>
+
+<h2 class="sr-only">GoJamu Portal Reseller — mockup tampilan mobile dan desktop</h2>
+
+<p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:8px;">Portal reseller — kiri: tampilan mobile (bottom nav), kanan: tampilan desktop (halaman buat order / checkout)</p>
+
+<div class="r-shell">
+  <!-- MOBILE LEFT -->
+  <div class="mobile-frame">
+    <div class="mob-header">
+      <div class="mob-logo">🌿 GoJamu</div>
+      <div class="mob-icons">
+        <i class="ti ti-bell" aria-hidden="true"></i><span class="mob-badge">2</span>
+        <i class="ti ti-user-circle" aria-hidden="true"></i>
+      </div>
+    </div>
+    <div class="mob-content">
+      <!-- GREETING -->
+      <div class="greet-card">
+        <div class="greet-name">Halo, Siti Rahayu 👋</div>
+        <div class="greet-code">Kode: GJ-0047</div>
+        <div class="greet-stats">
+          <div class="gs-item"><div class="gs-val">24</div><div class="gs-lbl">Total Order</div></div>
+          <div class="gs-item"><div class="gs-val">248</div><div class="gs-lbl">Point Aktif</div></div>
+          <div class="gs-item"><div class="gs-val">2.480</div><div class="gs-lbl">Total Pcs Beli</div></div>
+          <div class="gs-item"><div class="gs-val">Rp 82jt</div><div class="gs-lbl">Total Pembelian</div></div>
+        </div>
+      </div>
+
+      <!-- POINT PROGRESS -->
+      <div class="point-card">
+        <div class="point-card-header">
+          <div class="point-title"><i class="ti ti-coin" style="font-size:13px;vertical-align:-2px" aria-hidden="true"></i> Saldo Point</div>
+          <div style="font-size:9px;color:var(--gray5)">Lihat histori →</div>
+        </div>
+        <div><span class="point-current">248</span> <span class="point-unit">point</span></div>
+        <div class="reward-progress">
+          <div class="reward-lbl">Menuju Emas 3 Gram (2.200 pt)</div>
+          <div class="prog-bar-wrap"><div class="prog-bar" style="width:11.3%"></div></div>
+          <div class="prog-hint">Butuh 1.952 point lagi</div>
+        </div>
+      </div>
+
+      <!-- KATALOG -->
+      <div class="sec-title"><i class="ti ti-package" aria-hidden="true"></i> Katalog Produk</div>
+      <div class="prod-grid">
+        <div class="prod-card">
+          <div class="prod-img maha">🌸</div>
+          <div class="prod-info">
+            <div class="prod-name">Mahakunir</div>
+            <span class="prod-tag" style="background:var(--mahalt);color:var(--maha)">Original Kunir</span>
+            <div class="prod-price">Rp 55rb/pcs</div>
+            <div class="prod-stock">Stok: 312</div>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-img nirl">💙</div>
+          <div class="prod-info">
+            <div class="prod-name">Nirlawa</div>
+            <span class="prod-tag" style="background:var(--nirlt);color:var(--nirla)">Kunir & Temulawak</span>
+            <div class="prod-price">Rp 55rb/pcs</div>
+            <div class="prod-stock">Stok: 87</div>
+          </div>
+        </div>
+        <div class="prod-card" style="grid-column:1/-1">
+          <div style="display:flex;gap:8px;padding:6px">
+            <div class="prod-img koga" style="height:40px;width:40px;border-radius:6px;flex-shrink:0">🍃</div>
+            <div>
+              <div class="prod-name" style="font-size:11px">Ko Gan Ti — Teh Celup Balakacida</div>
+              <span class="prod-tag" style="background:var(--g100);color:var(--g700)">10 Tea Bags</span>
+              <div class="prod-price">Rp 55rb/pcs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ORDER TERBARU -->
+      <div class="sec-title" style="margin-top:4px"><i class="ti ti-receipt" aria-hidden="true"></i> Order Terbaru</div>
+      <div class="order-item">
+        <div class="order-top"><div class="order-inv">GJ-2026-00892</div><span class="badge badge-paid">Paid</span></div>
+        <div class="order-prod">Mahakunir × 30 pcs + Nirlawa × 15 pcs</div>
+        <div class="order-bottom"><div class="order-total">Rp 2.115.000</div><div class="order-date">20 Mei 2026</div></div>
+      </div>
+      <div class="order-item">
+        <div class="order-top"><div class="order-inv">GJ-2026-00871</div><span class="badge badge-shipped">Shipped</span></div>
+        <div class="order-prod">Ko Gan Ti × 25 pcs</div>
+        <div class="order-bottom"><div class="order-total">Rp 1.175.000</div><div class="order-date">12 Mei 2026</div></div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="mob-bottom-nav">
+      <div class="bnav-item active"><i class="ti ti-home" aria-hidden="true"></i>Home</div>
+      <div class="bnav-item"><i class="ti ti-shopping-cart" aria-hidden="true"></i>Order</div>
+      <div class="bnav-item"><i class="ti ti-receipt" aria-hidden="true"></i>Histori</div>
+      <div class="bnav-item"><i class="ti ti-coin" aria-hidden="true"></i>Point</div>
+      <div class="bnav-item"><i class="ti ti-gift" aria-hidden="true"></i>Reward</div>
+    </div>
+  </div>
+
+  <!-- DESKTOP RIGHT — CHECKOUT -->
+  <div class="desktop-frame">
+    <div class="desk-header">
+      <div style="font-size:13px;font-weight:600;color:var(--g950)">🛒 Buat Order Baru</div>
+      <div class="desk-tab-bar" style="margin-left:auto">
+        <div class="desk-tab">Katalog</div>
+        <div class="desk-tab active">Keranjang</div>
+        <div class="desk-tab">Konfirmasi</div>
+      </div>
+    </div>
+    <div class="desk-content">
+      <div class="checkout-wrap">
+        <!-- CART -->
+        <div class="cart-table">
+          <div class="cart-head">Produk dalam Keranjang — 75 pcs total</div>
+          <div class="cart-row">
+            <div>
+              <div class="cart-prod-name">Mahakunir — Original Kunir 100g</div>
+              <div style="display:flex;gap:4px;margin-top:2px"><span style="background:var(--mahalt);color:var(--maha);font-size:9px;font-weight:600;padding:1px 5px;border-radius:6px">MHK</span><span class="cart-sub-lbl">SKU: GJ-MHK-001</span></div>
+            </div>
+            <div class="qty-ctrl"><div class="qty-btn">−</div><div class="qty-val">40</div><div class="qty-btn">+</div></div>
+            <div style="text-align:right">
+              <div class="cart-price">Rp 1.680.000</div>
+              <div style="font-size:9px;color:var(--gray5)">40 × Rp 42.000</div>
+            </div>
+          </div>
+          <div class="cart-row">
+            <div>
+              <div class="cart-prod-name">Nirlawa — Kunir & Temulawak 100g</div>
+              <div style="display:flex;gap:4px;margin-top:2px"><span style="background:var(--nirlt);color:var(--nirla);font-size:9px;font-weight:600;padding:1px 5px;border-radius:6px">NRL</span><span class="cart-sub-lbl">SKU: GJ-NRL-001</span></div>
+            </div>
+            <div class="qty-ctrl"><div class="qty-btn">−</div><div class="qty-val">35</div><div class="qty-btn">+</div></div>
+            <div style="text-align:right">
+              <div class="cart-price">Rp 1.470.000</div>
+              <div style="font-size:9px;color:var(--gray5)">35 × Rp 42.000</div>
+            </div>
+          </div>
+          <div class="cart-row" style="background:var(--g50)">
+            <div class="cart-prod-name" style="color:var(--gray5);font-size:11px">+ Tambah produk lain</div>
+            <div style="margin-left:auto"><i class="ti ti-plus" style="font-size:16px;color:var(--g500)" aria-hidden="true"></i></div>
+          </div>
+        </div>
+
+        <!-- SUMMARY -->
+        <div class="summary-panel">
+          <div class="sum-title">Ringkasan Order</div>
+          <div class="sum-row"><span class="sum-lbl">Total pcs</span><span class="sum-val" style="font-weight:700;color:var(--g700)">75 pcs</span></div>
+          <div class="tier-highlight">
+            <div class="tier-label">Tier harga berlaku (51–100 pcs)</div>
+            <div class="tier-val">Rp 42.000 / pcs</div>
+          </div>
+          <div class="sum-row"><span class="sum-lbl">Subtotal produk</span><span class="sum-val">Rp 3.150.000</span></div>
+          <div class="sum-row"><span class="sum-lbl">Ongkos kirim</span><span class="sum-val" style="color:var(--gray5);font-style:italic;font-size:11px">Ditentukan admin</span></div>
+          <hr class="divider-sum"/>
+          <div class="sum-row" style="font-size:13px"><span class="sum-lbl" style="font-weight:600;color:var(--g950)">Total bayar</span><span class="sum-val" style="font-weight:700;font-size:14px;color:var(--g950)">Rp 3.150.000</span></div>
+          <div class="point-preview">
+            <i class="ti ti-coin" aria-hidden="true"></i>
+            <div>Kamu akan dapat <strong>7 point</strong> setelah order selesai<br><span style="font-size:9px;color:var(--gray5)">(75 ÷ 10 = 7 point)</span></div>
+          </div>
+          <button class="checkout-btn">Lanjut ke Pembayaran →</button>
+          <div style="font-size:9px;color:var(--gray5);text-align:center;margin-top:6px">Bayar via transfer bank manual</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p style="font-size:11px;color:var(--color-text-secondary);margin-top:8px;">↑ Portal reseller — kiri: mobile view dengan bottom navigation, kanan: desktop view halaman checkout dengan tier harga + preview point otomatis</p>

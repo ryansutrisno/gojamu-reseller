@@ -1,7 +1,13 @@
+export type UserRole = 'super_admin' | 'admin' | 'warehouse' | 'finance' | 'reseller';
+
+export type UserStatus = 'active' | 'inactive';
+
 export type User = {
     id: number;
     name: string;
     email: string;
+    role: UserRole;
+    status: UserStatus;
     avatar?: string;
     email_verified_at: string | null;
     created_at: string;
@@ -10,5 +16,5 @@ export type User = {
 };
 
 export type Auth = {
-    user: User;
+    user: User | null;
 };

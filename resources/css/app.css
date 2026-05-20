@@ -4,8 +4,59 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
 @theme {
-    --font-sans:
-        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji';
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-gojamu-950: #1a4d2e;
+    --color-gojamu-700: #2d7a4f;
+    --color-gojamu-500: #3e9b64;
+    --color-gojamu-300: #6dbf8a;
+    --color-gojamu-100: #c5edd4;
+    --color-gojamu-50: #edf7f1;
+
+    --color-kunyit-900: #7a4a00;
+    --color-kunyit-700: #c47f00;
+    --color-kunyit-500: #e8a800;
+    --color-kunyit-300: #faca3b;
+    --color-kunyit-100: #fde8a0;
+    --color-kunyit-50: #fdf6e3;
+
+    --color-mahakunir-900: #9c1a42;
+    --color-mahakunir-700: #c4365e;
+    --color-mahakunir-500: #e86b92;
+    --color-mahakunir-300: #f5a8bc;
+    --color-mahakunir-100: #fde6ee;
+
+    --color-nirlawa-900: #0d3a6b;
+    --color-nirlawa-700: #1a6baf;
+    --color-nirlawa-500: #3a9bd6;
+    --color-nirlawa-300: #9dd4f0;
+    --color-nirlawa-100: #e3f4fc;
+
+    --color-herbal-950: #1c1f1b;
+    --color-herbal-700: #4b5249;
+    --color-herbal-500: #8a9187;
+    --color-herbal-300: #c8cfc6;
+    --color-herbal-100: #f0f2ef;
+    --color-herbal-50: #fafbf9;
+}
+
+.admin-sidebar-scrollbar {
+    scrollbar-color: rgba(250, 202, 59, 0.55) rgba(255, 255, 255, 0.08);
+    scrollbar-width: thin;
+}
+
+.admin-sidebar-scrollbar::-webkit-scrollbar {
+    width: 0.55rem;
+}
+
+.admin-sidebar-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+}
+
+.admin-sidebar-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(250, 202, 59, 0.55);
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background-clip: content-box;
 }

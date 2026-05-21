@@ -1,3 +1,10 @@
+## [1.1.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.0.0...v1.1.0) (2026-05-21)
+
+
+### ✨ Features
+
+* add inventory, product and reseller management ([d63c31e](https://github.com/ryansutrisno/gojamu-reseller/commit/d63c31e3bc5db68fb06f7fc62efba7e8a492c467))
+
 ## 1.0.0 (2026-05-21)
 
 

@@ -1,5 +1,6 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import ResellerLayout from '@/layouts/reseller-layout';
+import { create } from '@/routes/reseller/orders';
 
 const products = [
     { name: 'Mahakunir', tone: 'bg-mahakunir-100 text-mahakunir-900', stock: 'Ready' },
@@ -74,9 +75,9 @@ export default function ResellerDashboard() {
                         <div className="flex justify-between"><span>Ongkir</span><strong>Ditentukan admin</strong></div>
                         <div className="flex justify-between border-t border-herbal-100 pt-3"><span>Potensi point</span><strong>7 point</strong></div>
                     </div>
-                    <button className="mt-6 w-full rounded-2xl bg-kunyit-500 px-5 py-3 text-sm font-bold text-gojamu-950 shadow-sm shadow-kunyit-100">
+                    <Link href={create.url()} className="mt-6 inline-flex w-full justify-center rounded-2xl bg-kunyit-500 px-5 py-3 text-sm font-bold text-gojamu-950 shadow-sm shadow-kunyit-100">
                         Buat Order Baru →
-                    </button>
+                    </Link>
                 </article>
             </section>
         </ResellerLayout>

@@ -1,7 +1,9 @@
-import { Form, usePage } from '@inertiajs/react';
+import { Form, Link, usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 
 import { logout } from '@/routes';
+import { dashboard } from '@/routes/reseller';
+import { index as resellerOrdersIndex } from '@/routes/reseller/orders';
 import type { User } from '@/types';
 
 type ResellerLayoutProps = {
@@ -15,7 +17,13 @@ type SharedProps = {
     };
 };
 
-const bottomItems = ['Home', 'Order', 'Histori', 'Point', 'Reward'];
+const bottomItems = [
+    { href: dashboard.url(), label: 'Home' },
+    { href: resellerOrdersIndex.url(), label: 'Order' },
+    { href: dashboard.url(), label: 'Histori' },
+    { href: dashboard.url(), label: 'Point' },
+    { href: dashboard.url(), label: 'Reward' },
+];
 
 export default function ResellerLayout({ children, title }: ResellerLayoutProps) {
     const { auth } = usePage<SharedProps>().props;
@@ -48,15 +56,16 @@ export default function ResellerLayout({ children, title }: ResellerLayoutProps)
             <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-gojamu-100 bg-white/95 px-2 py-2 shadow-2xl shadow-gojamu-950/10 backdrop-blur md:hidden">
                 <div className="mx-auto grid max-w-md grid-cols-5 gap-1">
                     {bottomItems.map((item) => (
-                        <button
-                            key={item}
+                        <Link
+                            key={item.label}
+                            href={item.href}
                             className={[
-                                'rounded-2xl px-2 py-2 text-xs font-bold',
-                                item === 'Home' ? 'bg-gojamu-700 text-white' : 'text-gojamu-700',
+                                 'rounded-2xl px-2 py-2 text-xs font-bold',
+                                item.label === 'Home' ? 'bg-gojamu-700 text-white' : 'text-gojamu-700',
                             ].join(' ')}
                         >
-                            {item}
-                        </button>
+                            {item.label}
+                        </Link>
                     ))}
                 </div>
             </nav>

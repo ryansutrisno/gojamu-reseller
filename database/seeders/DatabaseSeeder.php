@@ -199,9 +199,11 @@ class DatabaseSeeder extends Seeder
     private function seedPriceTiers(): void
     {
         $tiers = [
-            ['name' => 'Starter Reseller', 'min_qty' => 1, 'max_qty' => 11, 'price_per_pcs' => 25000],
-            ['name' => 'Growth Reseller', 'min_qty' => 12, 'max_qty' => 47, 'price_per_pcs' => 22000],
-            ['name' => 'Power Reseller', 'min_qty' => 48, 'max_qty' => null, 'price_per_pcs' => 20000],
+            ['name' => 'Tier 1-12 pcs', 'min_qty' => 1, 'max_qty' => 12, 'price_per_pcs' => 55000],
+            ['name' => 'Tier 13-50 pcs', 'min_qty' => 13, 'max_qty' => 50, 'price_per_pcs' => 47000],
+            ['name' => 'Tier 51-100 pcs', 'min_qty' => 51, 'max_qty' => 100, 'price_per_pcs' => 42000],
+            ['name' => 'Tier 101-200 pcs', 'min_qty' => 101, 'max_qty' => 200, 'price_per_pcs' => 37000],
+            ['name' => 'Tier 201-300 pcs', 'min_qty' => 201, 'max_qty' => 300, 'price_per_pcs' => 32000],
         ];
 
         foreach ($tiers as $tier) {

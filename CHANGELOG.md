@@ -1,3 +1,20 @@
+## [1.2.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.1.0...v1.2.0) (2026-05-22)
+
+
+### ✨ Features
+
+* add complete reseller order workflow ([0e3198e](https://github.com/ryansutrisno/gojamu-reseller/commit/0e3198ea41a0b7ef3de687a20150a84636752983))
+
+
+### 📚 Documentation
+
+* add project readme ([47ad05e](https://github.com/ryansutrisno/gojamu-reseller/commit/47ad05e1aadf26c138f1e5d0609d3db505a41e00))
+
+
+### 🔁 CI/CD
+
+* **tests:** remove PHP 8.3 from test matrix ([53870cd](https://github.com/ryansutrisno/gojamu-reseller/commit/53870cdb752fda57c215c7256c760692295ef442))
+
 ## [1.1.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.0.0...v1.1.0) (2026-05-21)
 
 

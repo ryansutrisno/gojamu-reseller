@@ -13,6 +13,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\Inventory;
 use App\Models\Order;
+use App\Models\Payment;
+use App\Models\PaymentProof;
 use App\Models\PriceTier;
 use App\Models\Product;
 use App\Models\ProductVariant;
@@ -192,7 +194,7 @@ class OrderController extends Controller
         abort_unless($order->reseller_id === $reseller->id, 403);
 
         return Inertia::render('reseller/orders/show', [
-            'order' => $this->orderDetail($order->load(['items', 'warehouse', 'priceTier'])),
+            'order' => $this->orderDetail($order->load(['items', 'warehouse', 'priceTier', 'payment.proofs.uploader', 'payment.verifier'])),
         ]);
     }
 
@@ -282,6 +284,10 @@ class OrderController extends Controller
      */
     private function orderDetail(Order $order): array
     {
+        $payment = $order->payment;
+        $proofs = $payment?->proofs->sortByDesc('created_at')->values() ?? collect();
+        $latestProof = $proofs->first();
+
         return [
             ...$this->orderSummary($order),
             'price_per_pcs' => $order->price_per_pcs,
@@ -308,6 +314,66 @@ class OrderController extends Controller
                 'subtotal' => $item->subtotal,
                 'weight_gram' => $item->weight_gram,
             ])->values(),
+            'payment' => $this->paymentDetail($payment),
+            'payment_proofs' => $proofs->map(fn (PaymentProof $proof): array => $this->paymentProofDetail($proof))->values(),
+            'latest_payment_proof' => $latestProof instanceof PaymentProof ? $this->paymentProofDetail($latestProof) : null,
+            'payment_instructions' => $this->paymentInstructions($order, $payment),
+            'can_upload_payment_proof' => in_array($order->payment_status, [PaymentStatus::Pending, PaymentStatus::Rejected], true),
+        ];
+    }
+
+    /**
+     * @return array{id: int, method: string, amount: int, status: string, status_label: string, paid_at: ?string, verified_at: ?string, rejected_reason: ?string}|null
+     */
+    private function paymentDetail(?Payment $payment): ?array
+    {
+        if (! $payment) {
+            return null;
+        }
+
+        return [
+            'id' => $payment->id,
+            'method' => $payment->method,
+            'amount' => $payment->amount,
+            'status' => $payment->status->value,
+            'status_label' => $payment->status->label(),
+            'paid_at' => $payment->paid_at?->toISOString(),
+            'verified_at' => $payment->verified_at?->toISOString(),
+            'rejected_reason' => $payment->rejected_reason,
+        ];
+    }
+
+    /**
+     * @return array{id: int, status: string, status_label: string, notes: ?string, uploaded_at: ?string, uploader_name: ?string}
+     */
+    private function paymentProofDetail(PaymentProof $proof): array
+    {
+        return [
+            'id' => $proof->id,
+            'status' => $proof->status->value,
+            'status_label' => $proof->status->label(),
+            'notes' => $proof->notes,
+            'uploaded_at' => $proof->created_at?->toISOString(),
+            'uploader_name' => $proof->uploader?->name,
+        ];
+    }
+
+    /**
+     * @return array{bank_name: string, account_number: string, account_name: string, amount: int, steps: list<string>}
+     */
+    private function paymentInstructions(Order $order, ?Payment $payment): array
+    {
+        return [
+            'bank_name' => 'BCA',
+            'account_number' => '1234567890',
+            'account_name' => 'PT GoJamu Indonesia',
+            'amount' => $payment?->amount ?? $order->total_amount,
+            'steps' => [
+                'Transfer sesuai nominal tagihan agar verifikasi lebih cepat.',
+                'Simpan bukti transfer dari mobile banking, ATM, atau teller.',
+                'Unggah bukti pembayaran melalui formulir di halaman ini.',
+                'Tim finance akan memverifikasi pembayaran sebelum order diproses.',
+            ],
         ];
     }
 }

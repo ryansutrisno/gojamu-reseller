@@ -2,8 +2,10 @@
 
 use App\Enums\UserRole;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\PaymentVerificationController as AdminPaymentVerificationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Reseller\OrderController as ResellerOrderController;
+use App\Http\Controllers\Reseller\PaymentProofController as ResellerPaymentProofController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +41,16 @@ Route::middleware('auth')->group(function (): void {
 
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
+
+        Route::middleware('role:'.implode(',', [
+            UserRole::SuperAdmin->value,
+            UserRole::Admin->value,
+            UserRole::Finance->value,
+        ]))->group(function (): void {
+            Route::get('/orders/{order}/payment-proofs/{paymentProof}', [AdminPaymentVerificationController::class, 'show'])->name('orders.payment-proofs.show');
+            Route::post('/orders/{order}/payment-proofs/{paymentProof}/approve', [AdminPaymentVerificationController::class, 'approve'])->name('orders.payment-proofs.approve');
+            Route::post('/orders/{order}/payment-proofs/{paymentProof}/reject', [AdminPaymentVerificationController::class, 'reject'])->name('orders.payment-proofs.reject');
+        });
     });
 
     Route::middleware('role:'.UserRole::Reseller->value)->prefix('reseller')->name('reseller.')->group(function (): void {
@@ -50,5 +62,6 @@ Route::middleware('auth')->group(function (): void {
         Route::get('/orders/create', [ResellerOrderController::class, 'create'])->name('orders.create');
         Route::post('/orders', [ResellerOrderController::class, 'store'])->name('orders.store');
         Route::get('/orders/{order}', [ResellerOrderController::class, 'show'])->name('orders.show');
+        Route::post('/orders/{order}/payment-proof', [ResellerPaymentProofController::class, 'store'])->name('orders.payment-proof.store');
     });
 });

@@ -1,3 +1,10 @@
+## [1.3.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.2.0...v1.3.0) (2026-05-25)
+
+
+### ✨ Features
+
+* **payment-proofs:** add manual payment proof submission and verification flow ([011e425](https://github.com/ryansutrisno/gojamu-reseller/commit/011e42542960c8b4a1a19d09c38054867ed3bbce))
+
 ## [1.2.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.1.0...v1.2.0) (2026-05-22)
 
 

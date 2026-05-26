@@ -43,6 +43,24 @@ type PaymentInstructions = {
     steps: string[];
 };
 
+type ShipmentDetail = {
+    id: number;
+    status: string;
+    status_label: string;
+    recipient_name: string;
+    recipient_phone: string;
+    recipient_address: string;
+    recipient_city: string;
+    recipient_province: string;
+    recipient_postal_code: string | null;
+    courier: string | null;
+    service: string | null;
+    tracking_number: string | null;
+    shipping_cost: number;
+    shipped_at: string | null;
+    delivered_at: string | null;
+} | null;
+
 type OrderDetail = {
     id: number;
     invoice_number: string;
@@ -53,6 +71,8 @@ type OrderDetail = {
     total_qty: number;
     total_amount: number;
     potential_points: number;
+    earned_points: number;
+    completed_at: string | null;
     ordered_at: string | null;
     price_per_pcs: number;
     subtotal: number;
@@ -67,6 +87,7 @@ type OrderDetail = {
     latest_payment_proof: PaymentProofDetail | null;
     payment_instructions: PaymentInstructions;
     can_upload_payment_proof: boolean;
+    shipment: ShipmentDetail;
 };
 
 type OrdersShowProps = {
@@ -175,7 +196,7 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                         Pengiriman
                     </p>
                     <p className="mt-2 text-lg font-bold text-slate-950">
-                        {order.shipment_status.replace('_', ' ')}
+                        {order.shipment?.status_label ?? order.shipment_status.replace('_', ' ')}
                     </p>
                 </div>
             </section>
@@ -215,6 +236,66 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                                 </div>
                             ))}
                         </div>
+                    </div>
+
+                    <div className="rounded-[2rem] bg-white p-5 shadow-sm ring-1 ring-gojamu-100">
+                        <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                            <div>
+                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gojamu-600">
+                                    Tracking Pengiriman
+                                </p>
+                                <h2 className="mt-1 text-lg font-bold text-slate-950">
+                                    Status Paket
+                                </h2>
+                                <p className="mt-1 text-sm text-slate-500">
+                                    Nomor resi akan muncul setelah gudang mengirim pesanan.
+                                </p>
+                            </div>
+                            <span className="w-fit rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">
+                                {order.shipment?.status_label ?? order.shipment_status.replace('_', ' ')}
+                            </span>
+                        </div>
+
+                        {order.shipment ? (
+                            <div className="mt-4 grid gap-3 rounded-3xl bg-gojamu-50 p-4 text-sm text-slate-700 md:grid-cols-2">
+                                <div>
+                                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                        Kurir
+                                    </p>
+                                    <p className="mt-1 text-xl font-bold text-slate-950">
+                                        {order.shipment.courier ?? '-'} {order.shipment.service ?? ''}
+                                    </p>
+                                    <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                        Nomor Resi
+                                    </p>
+                                    <p className="mt-1 break-all rounded-2xl bg-white px-3 py-2 font-mono text-base font-bold text-gojamu-700 ring-1 ring-gojamu-100">
+                                        {order.shipment.tracking_number ?? 'Belum tersedia'}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                        Alamat Penerima
+                                    </p>
+                                    <p className="mt-1 font-semibold text-slate-950">
+                                        {order.shipment.recipient_name}
+                                    </p>
+                                    <p>{order.shipment.recipient_phone}</p>
+                                    <p>{order.shipment.recipient_address}</p>
+                                    <p>
+                                        {order.shipment.recipient_city}, {order.shipment.recipient_province}{' '}
+                                        {order.shipment.recipient_postal_code ?? ''}
+                                    </p>
+                                    <div className="mt-3 grid gap-2 text-xs text-slate-500 sm:grid-cols-2">
+                                        <p>Dikirim: {formatDate(order.shipment.shipped_at)}</p>
+                                        <p>Diterima: {formatDate(order.shipment.delivered_at)}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="mt-4 rounded-3xl bg-slate-50 p-4 text-sm text-slate-600">
+                                Pesanan belum masuk tahap pengiriman. Tenang Mas Bro, nanti resinya muncul di sini.
+                            </div>
+                        )}
                     </div>
 
                     <div className="rounded-[2rem] bg-white p-5 shadow-sm ring-1 ring-gojamu-100">
@@ -443,8 +524,14 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                                     <span>{currency.format(order.total_amount)}</span>
                                 </div>
                                 <p className="mt-2 text-sm text-white/60">
-                                    Potensi poin: {order.potential_points}
+                                    Potensi poin: {order.potential_points} · Poin didapat:{' '}
+                                    {order.earned_points}
                                 </p>
+                                {order.completed_at ? (
+                                    <p className="mt-1 text-xs text-white/50">
+                                        Selesai: {formatDate(order.completed_at)}
+                                    </p>
+                                ) : null}
                             </div>
                         </div>
                     </div>

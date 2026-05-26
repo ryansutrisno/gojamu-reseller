@@ -18,6 +18,7 @@ use App\Models\PaymentProof;
 use App\Models\PriceTier;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\Shipment;
 use App\Models\StockMovement;
 use App\Models\Warehouse;
 use Illuminate\Http\RedirectResponse;
@@ -194,7 +195,7 @@ class OrderController extends Controller
         abort_unless($order->reseller_id === $reseller->id, 403);
 
         return Inertia::render('reseller/orders/show', [
-            'order' => $this->orderDetail($order->load(['items', 'warehouse', 'priceTier', 'payment.proofs.uploader', 'payment.verifier'])),
+            'order' => $this->orderDetail($order->load(['items', 'warehouse', 'priceTier', 'shipment', 'payment.proofs.uploader', 'payment.verifier'])),
         ]);
     }
 
@@ -274,6 +275,8 @@ class OrderController extends Controller
             'total_qty' => $order->total_qty,
             'total_amount' => $order->total_amount,
             'potential_points' => $order->potential_points,
+            'earned_points' => $order->earned_points,
+            'completed_at' => $order->completed_at?->toISOString(),
             'ordered_at' => $order->ordered_at?->toISOString(),
             'items_count' => $order->items_count ?? $order->items()->count(),
         ];
@@ -319,6 +322,35 @@ class OrderController extends Controller
             'latest_payment_proof' => $latestProof instanceof PaymentProof ? $this->paymentProofDetail($latestProof) : null,
             'payment_instructions' => $this->paymentInstructions($order, $payment),
             'can_upload_payment_proof' => in_array($order->payment_status, [PaymentStatus::Pending, PaymentStatus::Rejected], true),
+            'shipment' => $this->shipmentDetail($order->shipment),
+        ];
+    }
+
+    /**
+     * @return array{id: int, status: string, status_label: string, recipient_name: string, recipient_phone: string, recipient_address: string, recipient_city: string, recipient_province: string, recipient_postal_code: ?string, courier: ?string, service: ?string, tracking_number: ?string, shipping_cost: int, shipped_at: ?string, delivered_at: ?string}|null
+     */
+    private function shipmentDetail(?Shipment $shipment): ?array
+    {
+        if (! $shipment) {
+            return null;
+        }
+
+        return [
+            'id' => $shipment->id,
+            'status' => $shipment->status->value,
+            'status_label' => $shipment->status->label(),
+            'recipient_name' => $shipment->recipient_name,
+            'recipient_phone' => $shipment->recipient_phone,
+            'recipient_address' => $shipment->recipient_address,
+            'recipient_city' => $shipment->recipient_city,
+            'recipient_province' => $shipment->recipient_province,
+            'recipient_postal_code' => $shipment->recipient_postal_code,
+            'courier' => $shipment->courier,
+            'service' => $shipment->service,
+            'tracking_number' => $shipment->tracking_number,
+            'shipping_cost' => $shipment->shipping_cost,
+            'shipped_at' => $shipment->shipped_at?->toISOString(),
+            'delivered_at' => $shipment->delivered_at?->toISOString(),
         ];
     }
 

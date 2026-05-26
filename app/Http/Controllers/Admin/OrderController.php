@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\OrderStatus;
 use App\Enums\PaymentProofStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ShipOrderRequest;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\PaymentProof;
+use App\Models\Shipment;
+use App\Services\ManualFulfillmentService;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -39,11 +44,32 @@ class OrderController extends Controller
 
     public function show(Order $order): Response
     {
-        $order->load(['reseller', 'warehouse', 'priceTier', 'items', 'payment.proofs.uploader', 'payment.verifier']);
+        $order->load(['reseller', 'warehouse', 'priceTier', 'items', 'shipment', 'payment.proofs.uploader', 'payment.verifier']);
 
         return Inertia::render('admin/orders/show', [
             'order' => $this->orderDetail($order),
         ]);
+    }
+
+    public function process(Order $order, ManualFulfillmentService $fulfillment): RedirectResponse
+    {
+        $fulfillment->markProcessing($order);
+
+        return back()->with('success', 'Pesanan mulai diproses gudang.');
+    }
+
+    public function ship(ShipOrderRequest $request, Order $order, ManualFulfillmentService $fulfillment): RedirectResponse
+    {
+        $fulfillment->ship($order, $request->validated());
+
+        return back()->with('success', 'Nomor resi pengiriman berhasil disimpan.');
+    }
+
+    public function complete(Order $order, ManualFulfillmentService $fulfillment): RedirectResponse
+    {
+        $fulfillment->complete($order);
+
+        return back()->with('success', 'Pesanan diselesaikan dan poin reseller diperbarui.');
     }
 
     /**
@@ -69,8 +95,10 @@ class OrderController extends Controller
             'discount_amount' => $order->discount_amount,
             'total_amount' => $order->total_amount,
             'potential_points' => $order->potential_points,
+            'earned_points' => $order->earned_points,
             'reseller_notes' => $order->reseller_notes,
             'ordered_at' => $order->ordered_at?->toISOString(),
+            'completed_at' => $order->completed_at?->toISOString(),
             'reseller' => $order->reseller ? [
                 'id' => $order->reseller->id,
                 'name' => $order->reseller->name,
@@ -97,6 +125,42 @@ class OrderController extends Controller
             'payment' => $this->paymentDetail($payment),
             'payment_proofs' => $proofs->map(fn (PaymentProof $proof): array => $this->paymentProofDetail($order, $proof))->values(),
             'latest_payment_proof' => $latestProof instanceof PaymentProof ? $this->paymentProofDetail($order, $latestProof) : null,
+            'shipment' => $this->shipmentDetail($order->shipment),
+            'fulfillment_actions' => [
+                'can_process' => $order->status === OrderStatus::Paid,
+                'can_ship' => $order->status === OrderStatus::Processing,
+                'can_complete' => $order->status === OrderStatus::Shipped,
+            ],
+        ];
+    }
+
+    /**
+     * @return array{id: int, status: string, status_label: string, recipient_name: string, recipient_phone: string, recipient_address: string, recipient_city: string, recipient_province: string, recipient_postal_code: ?string, courier: ?string, service: ?string, tracking_number: ?string, shipping_cost: int, provider: ?string, label_url: ?string, shipped_at: ?string, delivered_at: ?string}|null
+     */
+    private function shipmentDetail(?Shipment $shipment): ?array
+    {
+        if (! $shipment) {
+            return null;
+        }
+
+        return [
+            'id' => $shipment->id,
+            'status' => $shipment->status->value,
+            'status_label' => $shipment->status->label(),
+            'recipient_name' => $shipment->recipient_name,
+            'recipient_phone' => $shipment->recipient_phone,
+            'recipient_address' => $shipment->recipient_address,
+            'recipient_city' => $shipment->recipient_city,
+            'recipient_province' => $shipment->recipient_province,
+            'recipient_postal_code' => $shipment->recipient_postal_code,
+            'courier' => $shipment->courier,
+            'service' => $shipment->service,
+            'tracking_number' => $shipment->tracking_number,
+            'shipping_cost' => $shipment->shipping_cost,
+            'provider' => $shipment->provider,
+            'label_url' => $shipment->label_url,
+            'shipped_at' => $shipment->shipped_at?->toISOString(),
+            'delivered_at' => $shipment->delivered_at?->toISOString(),
         ];
     }
 

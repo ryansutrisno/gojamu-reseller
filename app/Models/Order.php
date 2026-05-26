@@ -108,4 +108,12 @@ class Order extends Model
     {
         return $this->hasMany(PaymentProof::class);
     }
+
+    /**
+     * @return HasOne<Shipment, $this>
+     */
+    public function shipment(): HasOne
+    {
+        return $this->hasOne(Shipment::class);
+    }
 }

@@ -1,7 +1,7 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 
 import AdminLayout from '@/layouts/admin-layout';
-import { index } from '@/routes/admin/orders';
+import { complete, index, process as processOrder, ship } from '@/routes/admin/orders';
 import {
     approve,
     reject,
@@ -42,6 +42,30 @@ type PaymentProofDetail = {
     can_reject: boolean;
 };
 
+type ShipmentDetail = {
+    id: number;
+    status: string;
+    status_label: string;
+    recipient_name: string;
+    recipient_phone: string;
+    recipient_address: string;
+    recipient_city: string;
+    recipient_province: string;
+    recipient_postal_code: string | null;
+    courier: string | null;
+    service: string | null;
+    tracking_number: string | null;
+    shipping_cost: number;
+    shipped_at: string | null;
+    delivered_at: string | null;
+} | null;
+
+type FulfillmentActions = {
+    can_process: boolean;
+    can_ship: boolean;
+    can_complete: boolean;
+};
+
 type AdminOrderDetail = {
     id: number;
     invoice_number: string;
@@ -56,6 +80,8 @@ type AdminOrderDetail = {
     discount_amount: number;
     total_amount: number;
     potential_points: number;
+    earned_points: number;
+    completed_at?: string | null;
     reseller_notes: string | null;
     ordered_at?: string | null;
     reseller?: { name: string; reseller_code: string } | null;
@@ -65,6 +91,8 @@ type AdminOrderDetail = {
     payment: PaymentDetail;
     payment_proofs: PaymentProofDetail[];
     latest_payment_proof: PaymentProofDetail | null;
+    shipment: ShipmentDetail;
+    fulfillment_actions: FulfillmentActions;
 };
 
 type AdminOrdersShowProps = {
@@ -105,6 +133,19 @@ function proofUrl(orderId: number, proof: PaymentProofDetail): string {
 export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
     const approveForm = useForm({});
     const rejectForm = useForm<{ reason: string }>({ reason: '' });
+    const processForm = useForm({});
+    const completeForm = useForm({});
+    const shipForm = useForm<{
+        courier: string;
+        service: string;
+        tracking_number: string;
+        shipping_cost: string;
+    }>({
+        courier: order.shipment?.courier ?? '',
+        service: order.shipment?.service ?? '',
+        shipping_cost: String(order.shipping_cost ?? 0),
+        tracking_number: order.shipment?.tracking_number ?? '',
+    });
 
     const latestProof = order.latest_payment_proof;
 
@@ -119,6 +160,26 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
 
         rejectForm.post(reject.url({ order: order.id, paymentProof: proof.id }), {
             onSuccess: () => rejectForm.reset('reason'),
+            preserveScroll: true,
+        });
+    };
+
+    const submitProcess = () => {
+        processForm.post(processOrder.url(order.id), {
+            preserveScroll: true,
+        });
+    };
+
+    const submitShip = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        shipForm.post(ship.url(order.id), {
+            preserveScroll: true,
+        });
+    };
+
+    const submitComplete = () => {
+        completeForm.post(complete.url(order.id), {
             preserveScroll: true,
         });
     };
@@ -192,6 +253,151 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                                     </div>
                                 </div>
                             ))}
+                        </div>
+                    </div>
+
+                    <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
+                        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                            <div>
+                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gojamu-600">
+                                    Fulfillment Gudang
+                                </p>
+                                <h2 className="mt-1 text-lg font-bold text-slate-950">
+                                    Pengiriman Manual
+                                </h2>
+                                <p className="mt-1 text-sm text-slate-500">
+                                    Proses order, isi kurir dan resi, lalu selesaikan setelah paket diterima.
+                                </p>
+                            </div>
+                            <span className="w-fit rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">
+                                {order.shipment?.status_label ?? order.shipment_status}
+                            </span>
+                        </div>
+
+                        {order.shipment ? (
+                            <div className="mt-4 grid gap-3 rounded-3xl bg-slate-50 p-4 text-sm text-slate-600 md:grid-cols-2">
+                                <div>
+                                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                        Penerima
+                                    </p>
+                                    <p className="mt-1 font-semibold text-slate-950">
+                                        {order.shipment.recipient_name}
+                                    </p>
+                                    <p>{order.shipment.recipient_phone}</p>
+                                    <p>{order.shipment.recipient_address}</p>
+                                    <p>
+                                        {order.shipment.recipient_city}, {order.shipment.recipient_province}{' '}
+                                        {order.shipment.recipient_postal_code ?? ''}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                        Tracking
+                                    </p>
+                                    <p className="mt-1 font-semibold text-slate-950">
+                                        {order.shipment.courier ?? '-'} {order.shipment.service ?? ''}
+                                    </p>
+                                    <p>{order.shipment.tracking_number ?? 'Nomor resi belum diisi.'}</p>
+                                    <p>Ongkir: {currency.format(order.shipment.shipping_cost)}</p>
+                                    <p>Dikirim: {formatDate(order.shipment.shipped_at)}</p>
+                                    <p>Diterima: {formatDate(order.shipment.delivered_at)}</p>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="mt-4 rounded-3xl bg-slate-50 p-4 text-sm text-slate-600">
+                                Shipment belum dibuat. Klik proses gudang setelah pembayaran lunas.
+                            </div>
+                        )}
+
+                        <div className="mt-4 grid gap-4 lg:grid-cols-3">
+                            <div className="rounded-3xl bg-gojamu-50 p-4 ring-1 ring-gojamu-100">
+                                <p className="text-sm font-semibold text-slate-950">1. Proses gudang</p>
+                                <p className="mt-1 text-sm text-slate-500">
+                                    Tandai order lunas agar masuk antrean packing.
+                                </p>
+                                <button
+                                    className="mt-3 rounded-full bg-gojamu-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-gojamu-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                                    disabled={!order.fulfillment_actions.can_process || processForm.processing}
+                                    onClick={submitProcess}
+                                    type="button"
+                                >
+                                    {processForm.processing ? 'Memproses...' : 'Proses'}
+                                </button>
+                            </div>
+
+                            <form
+                                className="rounded-3xl bg-white p-4 ring-1 ring-slate-200"
+                                onSubmit={submitShip}
+                            >
+                                <p className="text-sm font-semibold text-slate-950">2. Input resi</p>
+                                <div className="mt-3 space-y-3">
+                                    <input
+                                        className="w-full rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-gojamu-400 focus:outline-none focus:ring-4 focus:ring-gojamu-100"
+                                        onChange={(event) => shipForm.setData('courier', event.target.value)}
+                                        placeholder="Kurir, contoh: JNE"
+                                        value={shipForm.data.courier}
+                                    />
+                                    {shipForm.errors.courier ? (
+                                        <p className="text-sm font-medium text-red-600">{shipForm.errors.courier}</p>
+                                    ) : null}
+                                    <input
+                                        className="w-full rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-gojamu-400 focus:outline-none focus:ring-4 focus:ring-gojamu-100"
+                                        onChange={(event) => shipForm.setData('service', event.target.value)}
+                                        placeholder="Layanan, contoh: REG"
+                                        value={shipForm.data.service}
+                                    />
+                                    <input
+                                        className="w-full rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-gojamu-400 focus:outline-none focus:ring-4 focus:ring-gojamu-100"
+                                        onChange={(event) =>
+                                            shipForm.setData('tracking_number', event.target.value)
+                                        }
+                                        placeholder="Nomor resi"
+                                        value={shipForm.data.tracking_number}
+                                    />
+                                    {shipForm.errors.tracking_number ? (
+                                        <p className="text-sm font-medium text-red-600">
+                                            {shipForm.errors.tracking_number}
+                                        </p>
+                                    ) : null}
+                                    <input
+                                        className="w-full rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-gojamu-400 focus:outline-none focus:ring-4 focus:ring-gojamu-100"
+                                        min="0"
+                                        onChange={(event) =>
+                                            shipForm.setData('shipping_cost', event.target.value)
+                                        }
+                                        placeholder="Ongkir"
+                                        type="number"
+                                        value={shipForm.data.shipping_cost}
+                                    />
+                                    {shipForm.errors.shipping_cost ? (
+                                        <p className="text-sm font-medium text-red-600">
+                                            {shipForm.errors.shipping_cost}
+                                        </p>
+                                    ) : null}
+                                </div>
+                                <button
+                                    className="mt-3 rounded-full bg-slate-950 px-4 py-2 text-sm font-bold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
+                                    disabled={!order.fulfillment_actions.can_ship || shipForm.processing}
+                                    type="submit"
+                                >
+                                    {shipForm.processing ? 'Menyimpan...' : 'Simpan Resi'}
+                                </button>
+                            </form>
+
+                            <div className="rounded-3xl bg-emerald-50 p-4 ring-1 ring-emerald-100">
+                                <p className="text-sm font-semibold text-slate-950">3. Selesaikan</p>
+                                <p className="mt-1 text-sm text-slate-500">
+                                    Ubah order menjadi selesai dan berikan poin reseller.
+                                </p>
+                                <button
+                                    className="mt-3 rounded-full bg-emerald-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                                    disabled={!order.fulfillment_actions.can_complete || completeForm.processing}
+                                    onClick={submitComplete}
+                                    type="button"
+                                >
+                                    {completeForm.processing ? 'Memproses...' : 'Selesaikan'}
+                                </button>
+                            </div>
                         </div>
                     </div>
 

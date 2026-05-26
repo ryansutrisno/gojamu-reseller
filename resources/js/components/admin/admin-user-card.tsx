@@ -1,8 +1,8 @@
 import { Form } from '@inertiajs/react';
 
+import { Button } from '@/components/ui/button';
 import { logout } from '@/routes';
 
-import { Button } from '@/components/ui/button';
 
 type AdminUserCardProps = {
     initial: string;

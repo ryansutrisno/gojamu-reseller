@@ -1,9 +1,13 @@
 import { Head } from '@inertiajs/react';
 
-import { QuickActionsCard, type QuickActionItem } from '@/components/admin/dashboard/quick-actions-card';
-import { RecentOrdersTable, type RecentOrder } from '@/components/admin/dashboard/recent-orders-table';
-import { StatCard, type DashboardMetricTone } from '@/components/admin/dashboard/stat-card';
-import { StockCard, type StockItem } from '@/components/admin/dashboard/stock-card';
+import { QuickActionsCard  } from '@/components/admin/dashboard/quick-actions-card';
+import type {QuickActionItem} from '@/components/admin/dashboard/quick-actions-card';
+import { RecentOrdersTable  } from '@/components/admin/dashboard/recent-orders-table';
+import type {RecentOrder} from '@/components/admin/dashboard/recent-orders-table';
+import { StatCard  } from '@/components/admin/dashboard/stat-card';
+import type {DashboardMetricTone} from '@/components/admin/dashboard/stat-card';
+import { StockCard  } from '@/components/admin/dashboard/stock-card';
+import type {StockItem} from '@/components/admin/dashboard/stock-card';
 import AdminLayout from '@/layouts/admin-layout';
 
 type DashboardMetric = {

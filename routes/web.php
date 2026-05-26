@@ -45,6 +45,16 @@ Route::middleware('auth')->group(function (): void {
         Route::middleware('role:'.implode(',', [
             UserRole::SuperAdmin->value,
             UserRole::Admin->value,
+            UserRole::Warehouse->value,
+        ]))->group(function (): void {
+            Route::post('/orders/{order}/process', [AdminOrderController::class, 'process'])->name('orders.process');
+            Route::post('/orders/{order}/ship', [AdminOrderController::class, 'ship'])->name('orders.ship');
+            Route::post('/orders/{order}/complete', [AdminOrderController::class, 'complete'])->name('orders.complete');
+        });
+
+        Route::middleware('role:'.implode(',', [
+            UserRole::SuperAdmin->value,
+            UserRole::Admin->value,
             UserRole::Finance->value,
         ]))->group(function (): void {
             Route::get('/orders/{order}/payment-proofs/{paymentProof}', [AdminPaymentVerificationController::class, 'show'])->name('orders.payment-proofs.show');

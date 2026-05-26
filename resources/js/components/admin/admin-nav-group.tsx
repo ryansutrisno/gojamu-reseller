@@ -1,5 +1,5 @@
-import type { AdminNavGroup as AdminNavGroupData } from './navigation';
 import { AdminNavItem } from './admin-nav-item';
+import type { AdminNavGroup as AdminNavGroupData } from './navigation';
 
 type AdminNavGroupProps = AdminNavGroupData;
 

@@ -2,7 +2,8 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeadCell } from '@/components/ui/table';
 
-import { StatusBadge, type OrderStatus } from './status-badge';
+import { StatusBadge  } from './status-badge';
+import type {OrderStatus} from './status-badge';
 
 export type RecentOrder = {
     invoice: string;

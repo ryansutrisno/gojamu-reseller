@@ -1,3 +1,10 @@
+## [1.4.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.3.0...v1.4.0) (2026-05-26)
+
+
+### ✨ Features
+
+* add order shipment tracking and fulfillment ([cdb8a63](https://github.com/ryansutrisno/gojamu-reseller/commit/cdb8a630730a1eebf14aabab98545b1de7649a09))
+
 ## [1.3.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.2.0...v1.3.0) (2026-05-25)
 
 

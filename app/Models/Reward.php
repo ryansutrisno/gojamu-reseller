@@ -7,6 +7,7 @@ use Database\Factories\RewardFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['name', 'image', 'description', 'required_points', 'stock', 'status', 'start_date', 'end_date'])]
@@ -29,5 +30,13 @@ class Reward extends Model
             'start_date' => 'date',
             'end_date' => 'date',
         ];
+    }
+
+    /**
+     * @return HasMany<RewardRedemption, $this>
+     */
+    public function redemptions(): HasMany
+    {
+        return $this->hasMany(RewardRedemption::class);
     }
 }

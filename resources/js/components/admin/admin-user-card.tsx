@@ -24,7 +24,7 @@ export function AdminUserCard({ initial, name, roleLabel = 'Akses admin' }: Admi
                 </div>
             </div>
 
-            <Form {...logout.form()} className="mt-4">
+            <Form action={logout.url()} className="mt-4" method="post">
                 <Button type="submit" variant="soft" className="w-full bg-white/15 text-white hover:bg-white/25">
                     Keluar
                 </Button>

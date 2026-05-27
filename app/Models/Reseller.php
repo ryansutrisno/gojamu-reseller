@@ -58,4 +58,20 @@ class Reseller extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    /**
+     * @return HasMany<PointLedger, $this>
+     */
+    public function pointLedgers(): HasMany
+    {
+        return $this->hasMany(PointLedger::class);
+    }
+
+    /**
+     * @return HasMany<RewardRedemption, $this>
+     */
+    public function rewardRedemptions(): HasMany
+    {
+        return $this->hasMany(RewardRedemption::class);
+    }
 }

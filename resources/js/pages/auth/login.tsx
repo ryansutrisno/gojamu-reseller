@@ -41,7 +41,7 @@ export default function Login() {
                             <p className="mt-2 text-sm text-herbal-600">Gunakan akun admin atau reseller yang sudah dibuat.</p>
                         </div>
 
-                        <Form {...loginStore.form()} className="space-y-5">
+                        <Form action={loginStore.url()} className="space-y-5" method="post">
                             {({ errors, processing }) => (
                                 <>
                                     <label className="block">

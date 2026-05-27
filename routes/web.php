@@ -3,9 +3,12 @@
 use App\Enums\UserRole;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PaymentVerificationController as AdminPaymentVerificationController;
+use App\Http\Controllers\Admin\RewardRedemptionController as AdminRewardRedemptionController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Reseller\OrderController as ResellerOrderController;
 use App\Http\Controllers\Reseller\PaymentProofController as ResellerPaymentProofController;
+use App\Http\Controllers\Reseller\RewardController as ResellerRewardController;
+use App\Http\Controllers\Reseller\RewardRedemptionController as ResellerRewardRedemptionController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -61,12 +64,26 @@ Route::middleware('auth')->group(function (): void {
             Route::post('/orders/{order}/payment-proofs/{paymentProof}/approve', [AdminPaymentVerificationController::class, 'approve'])->name('orders.payment-proofs.approve');
             Route::post('/orders/{order}/payment-proofs/{paymentProof}/reject', [AdminPaymentVerificationController::class, 'reject'])->name('orders.payment-proofs.reject');
         });
+
+        Route::middleware('role:'.implode(',', [
+            UserRole::SuperAdmin->value,
+            UserRole::Admin->value,
+        ]))->group(function (): void {
+            Route::get('/reward-redemptions', [AdminRewardRedemptionController::class, 'index'])->name('reward-redemptions.index');
+            Route::post('/reward-redemptions/{rewardRedemption}/approve', [AdminRewardRedemptionController::class, 'approve'])->name('reward-redemptions.approve');
+            Route::post('/reward-redemptions/{rewardRedemption}/reject', [AdminRewardRedemptionController::class, 'reject'])->name('reward-redemptions.reject');
+            Route::post('/reward-redemptions/{rewardRedemption}/process', [AdminRewardRedemptionController::class, 'process'])->name('reward-redemptions.process');
+            Route::post('/reward-redemptions/{rewardRedemption}/complete', [AdminRewardRedemptionController::class, 'complete'])->name('reward-redemptions.complete');
+        });
     });
 
     Route::middleware('role:'.UserRole::Reseller->value)->prefix('reseller')->name('reseller.')->group(function (): void {
         Route::get('/dashboard', function () {
             return Inertia::render('reseller/dashboard');
         })->name('dashboard');
+
+        Route::get('/rewards', [ResellerRewardController::class, 'index'])->name('rewards.index');
+        Route::post('/rewards/{reward}/redemptions', [ResellerRewardRedemptionController::class, 'store'])->name('rewards.redemptions.store');
 
         Route::get('/orders', [ResellerOrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/create', [ResellerOrderController::class, 'create'])->name('orders.create');

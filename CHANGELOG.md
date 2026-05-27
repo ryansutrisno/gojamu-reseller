@@ -1,3 +1,10 @@
+## [1.5.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.4.0...v1.5.0) (2026-05-27)
+
+
+### ✨ Features
+
+* add reward redemption and point tracking ([cf8d92d](https://github.com/ryansutrisno/gojamu-reseller/commit/cf8d92d21f329b9a42ddfbe30108a67b801c996c))
+
 ## [1.4.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.3.0...v1.4.0) (2026-05-26)
 
 

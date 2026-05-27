@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { logout } from '@/routes';
 import { dashboard } from '@/routes/reseller';
 import { index as resellerOrdersIndex } from '@/routes/reseller/orders';
+import { index as resellerRewardsIndex } from '@/routes/reseller/rewards';
 import type { User } from '@/types';
 
 type ResellerLayoutProps = {
@@ -20,9 +21,9 @@ type SharedProps = {
 const bottomItems = [
     { href: dashboard.url(), label: 'Home' },
     { href: resellerOrdersIndex.url(), label: 'Order' },
-    { href: dashboard.url(), label: 'Histori' },
-    { href: dashboard.url(), label: 'Point' },
-    { href: dashboard.url(), label: 'Reward' },
+    { href: resellerOrdersIndex.url(), label: 'Histori' },
+    { href: resellerRewardsIndex.url(), label: 'Point' },
+    { href: resellerRewardsIndex.url(), label: 'Reward' },
 ];
 
 export default function ResellerLayout({ children, title }: ResellerLayoutProps) {
@@ -42,7 +43,7 @@ export default function ResellerLayout({ children, title }: ResellerLayoutProps)
                             <p className="font-bold">{user?.name ?? 'Reseller'}</p>
                             <p className="text-gojamu-700">Portal reseller</p>
                         </div>
-                        <Form {...logout.form()}>
+                        <Form action={logout.url()} method="post">
                             <button className="rounded-2xl bg-gojamu-950 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-gojamu-950/15 transition hover:bg-gojamu-700">
                                 Keluar
                             </button>
@@ -60,7 +61,7 @@ export default function ResellerLayout({ children, title }: ResellerLayoutProps)
                             key={item.label}
                             href={item.href}
                             className={[
-                                 'rounded-2xl px-2 py-2 text-xs font-bold',
+                                'rounded-2xl px-2 py-2 text-xs font-bold',
                                 item.label === 'Home' ? 'bg-gojamu-700 text-white' : 'text-gojamu-700',
                             ].join(' ')}
                         >

@@ -116,4 +116,12 @@ class Order extends Model
     {
         return $this->hasOne(Shipment::class);
     }
+
+    /**
+     * @return HasMany<PointLedger, $this>
+     */
+    public function pointLedgers(): HasMany
+    {
+        return $this->hasMany(PointLedger::class);
+    }
 }

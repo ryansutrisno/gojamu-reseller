@@ -1,6 +1,9 @@
+import { index as rewardRedemptionsIndex } from '@/routes/admin/reward-redemptions';
+
 export type AdminNavItem = {
     active?: boolean;
     badge?: number | string;
+    href?: string;
     label: string;
 };
 
@@ -25,6 +28,6 @@ export const adminNavigationGroups: AdminNavGroup[] = [
     },
     {
         label: 'Program',
-        items: [{ label: 'Point' }, { label: 'Reward' }, { label: 'Laporan' }],
+        items: [{ label: 'Point' }, { href: rewardRedemptionsIndex.url(), label: 'Reward' }, { label: 'Laporan' }],
     },
 ];

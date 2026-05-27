@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\Enums\OrderStatus;
+use App\Enums\PointLedgerType;
 use App\Enums\ShipmentStatus;
 use App\Models\Order;
+use App\Models\PointLedger;
 use App\Models\Reseller;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -120,7 +122,22 @@ class ManualFulfillmentService
 
             if ($earnedPoints === 0 && $lockedOrder->potential_points > 0) {
                 $earnedPoints = $lockedOrder->potential_points;
-                $reseller->increment('current_points', $earnedPoints);
+                $balanceBefore = $reseller->current_points;
+                $balanceAfter = $balanceBefore + $earnedPoints;
+
+                $reseller->forceFill([
+                    'current_points' => $balanceAfter,
+                ])->save();
+
+                PointLedger::query()->create([
+                    'reseller_id' => $reseller->id,
+                    'order_id' => $lockedOrder->id,
+                    'type' => PointLedgerType::Credit,
+                    'points' => $earnedPoints,
+                    'balance_before' => $balanceBefore,
+                    'balance_after' => $balanceAfter,
+                    'description' => "Poin dari order {$lockedOrder->invoice_number}",
+                ]);
             }
 
             $lockedOrder->forceFill([
@@ -138,7 +155,7 @@ class ManualFulfillmentService
             ])->save();
 
             return $lockedOrder->refresh()->load('shipment');
-        });
+        }, attempts: 5);
     }
 
     private function lockOrder(Order $order): Order

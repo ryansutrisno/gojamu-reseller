@@ -1,85 +1,165 @@
 import { Head, Link } from '@inertiajs/react';
+
 import ResellerLayout from '@/layouts/reseller-layout';
 import { create } from '@/routes/reseller/orders';
 
-const products = [
-    { name: 'Mahakunir', tone: 'bg-mahakunir-100 text-mahakunir-900', stock: 'Ready' },
-    { name: 'Nirlawa', tone: 'bg-nirlawa-100 text-nirlawa-900', stock: 'Stok terbatas' },
-    { name: 'Ko Gan Ti', tone: 'bg-gojamu-100 text-gojamu-900', stock: 'Ready' },
-];
+type ResellerStatus = {
+    label: string;
+    value: string;
+};
 
-export default function ResellerDashboard() {
+type ResellerSummary = {
+    city: string | null;
+    code: string;
+    name: string;
+    status: ResellerStatus;
+};
+
+type ResellerStats = {
+    current_points: number;
+    orders_count: number;
+    total_qty_purchased: number;
+    total_spent: string;
+};
+
+type PointProgress = {
+    current: number;
+    progress: number;
+    target: number;
+};
+
+type RecentOrder = {
+    id: number;
+    invoice_number: string;
+    ordered_at: string;
+    payment_status: ResellerStatus;
+    potential_points: number;
+    status: ResellerStatus;
+    total_amount: string;
+    total_qty: number;
+};
+
+type ResellerDashboardProps = {
+    latestOrder: RecentOrder | null;
+    points: PointProgress;
+    recentOrders: RecentOrder[];
+    reseller: ResellerSummary;
+    stats: ResellerStats;
+};
+
+const statCards = [
+    { key: 'orders_count', label: 'Total order', suffix: 'order' },
+    { key: 'current_points', label: 'Poin aktif', suffix: 'poin' },
+    { key: 'total_qty_purchased', label: 'Total pcs', suffix: 'pcs' },
+] as const;
+
+export default function ResellerDashboard({ latestOrder, points, recentOrders, reseller, stats }: ResellerDashboardProps) {
     return (
-        <ResellerLayout title="Portal Reseller">
+        <ResellerLayout title="Dashboard Reseller">
             <Head title="Dashboard Reseller" />
 
-            <section className="rounded-[2rem] bg-gradient-to-br from-gojamu-700 to-gojamu-950 p-6 text-white shadow-xl shadow-gojamu-100">
-                <p className="text-sm font-semibold text-gojamu-100">Selamat datang kembali</p>
-                <h1 className="mt-2 text-3xl font-bold tracking-tight">Reseller Demo GoJamu</h1>
-                <div className="mt-6 grid grid-cols-3 gap-3">
-                    {[
-                        ['Total order', '24'],
-                        ['Active point', '248'],
-                        ['Total pcs', '2.480'],
-                    ].map(([label, value]) => (
-                        <div key={label} className="rounded-2xl bg-white/12 p-4 backdrop-blur">
-                            <p className="text-xs text-gojamu-100">{label}</p>
-                            <p className="mt-1 text-xl font-bold">{value}</p>
+            <div className="space-y-8">
+                <section className="rounded-3xl bg-linear-to-br from-amber-100 via-white to-emerald-100 p-6 shadow-sm ring-1 ring-amber-200/70 md:p-8">
+                    <p className="text-xs font-semibold tracking-[0.3em] text-amber-700 uppercase">Dashboard reseller</p>
+                    <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                        <div>
+                            <h1 className="text-3xl font-bold text-stone-950 md:text-4xl">Halo, {reseller.name}</h1>
+                            <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-600">
+                                Pantau performa order, poin aktif, dan status pembelian terakhir dari satu tempat.
+                            </p>
+                        </div>
+                        <div className="rounded-2xl bg-white/80 px-4 py-3 text-sm shadow-sm ring-1 ring-amber-200/70">
+                            <p className="font-semibold text-stone-900">{reseller.code}</p>
+                            <p className="text-stone-500">{reseller.city ?? 'Kota belum diisi'} · {reseller.status.label}</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="grid gap-4 md:grid-cols-3">
+                    {statCards.map((card) => (
+                        <div key={card.key} className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
+                            <p className="text-sm font-medium text-stone-500">{card.label}</p>
+                            <p className="mt-3 text-3xl font-bold text-stone-950">{stats[card.key].toLocaleString('id-ID')}</p>
+                            <p className="mt-1 text-xs font-semibold tracking-[0.2em] text-amber-600 uppercase">{card.suffix}</p>
                         </div>
                     ))}
-                </div>
-            </section>
+                </section>
 
-            <section className="mt-5 rounded-[2rem] border border-kunyit-100 bg-kunyit-50 p-5 shadow-sm shadow-kunyit-100">
-                <div className="flex items-start justify-between gap-4">
-                    <div>
-                        <p className="text-sm font-bold uppercase tracking-[0.18em] text-kunyit-700">Reward point</p>
-                        <h2 className="mt-1 text-2xl font-bold text-gojamu-950">248 point aktif</h2>
-                        <p className="mt-2 text-sm text-herbal-700">Progress ke Emas 3 Gram: butuh 1.952 point lagi.</p>
-                    </div>
-                    <div className="rounded-2xl bg-white px-4 py-3 text-right shadow-sm">
-                        <p className="text-xs text-herbal-500">Target</p>
-                        <p className="font-bold text-kunyit-900">2.200 pt</p>
-                    </div>
-                </div>
-                <div className="mt-5 h-3 rounded-full bg-white">
-                    <div className="h-3 w-[11.3%] rounded-full bg-kunyit-500" />
-                </div>
-            </section>
-
-            <section className="mt-5 grid gap-4 md:grid-cols-[1fr_0.8fr]">
-                <article className="rounded-[2rem] border border-gojamu-100 bg-white p-5 shadow-sm shadow-gojamu-100">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-gojamu-500">Katalog</p>
-                            <h2 className="mt-1 text-xl font-bold text-gojamu-950">Produk GoJamu</h2>
-                        </div>
-                        <span className="rounded-full bg-gojamu-50 px-3 py-1 text-xs font-bold text-gojamu-700">Aktif</span>
-                    </div>
-                    <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                        {products.map((product) => (
-                            <div key={product.name} className="rounded-3xl border border-herbal-100 p-4">
-                                <div className={`inline-flex rounded-full px-3 py-1 text-xs font-bold ${product.tone}`}>{product.name}</div>
-                                <p className="mt-4 text-sm font-semibold text-herbal-700">{product.stock}</p>
-                                <p className="mt-2 text-xs leading-5 text-herbal-500">Harga tier otomatis mengikuti total pcs dalam order.</p>
+                <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+                    <div className="rounded-3xl bg-stone-950 p-6 text-white shadow-sm">
+                        <p className="text-sm font-semibold text-amber-200">Progress poin</p>
+                        <div className="mt-5 flex items-end justify-between gap-4">
+                            <div>
+                                <p className="text-4xl font-bold">{points.current.toLocaleString('id-ID')}</p>
+                                <p className="mt-1 text-sm text-stone-300">Target berikutnya {points.target.toLocaleString('id-ID')} poin</p>
                             </div>
-                        ))}
+                            <p className="text-sm font-semibold text-emerald-200">{points.progress}%</p>
+                        </div>
+                        <div className="mt-5 h-3 overflow-hidden rounded-full bg-white/10">
+                            <div className="h-full rounded-full bg-amber-300" style={{ width: `${points.progress}%` }} />
+                        </div>
                     </div>
-                </article>
 
-                <article className="rounded-[2rem] border border-gojamu-100 bg-white p-5 shadow-sm shadow-gojamu-100">
-                    <p className="text-sm font-semibold uppercase tracking-[0.18em] text-gojamu-500">Preview order</p>
-                    <h2 className="mt-1 text-xl font-bold text-gojamu-950">75 pcs = Rp42.000/pcs</h2>
-                    <div className="mt-5 space-y-3 text-sm text-herbal-700">
-                        <div className="flex justify-between"><span>Subtotal</span><strong>Rp3.150.000</strong></div>
-                        <div className="flex justify-between"><span>Ongkir</span><strong>Ditentukan admin</strong></div>
-                        <div className="flex justify-between border-t border-herbal-100 pt-3"><span>Potensi point</span><strong>7 point</strong></div>
+                    <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
+                        <p className="text-sm font-semibold text-stone-950">Order terbaru</p>
+                        {latestOrder ? (
+                            <div className="mt-5 space-y-3 text-sm text-stone-600">
+                                <div className="flex items-center justify-between gap-3">
+                                    <span>Invoice</span>
+                                    <span className="font-semibold text-stone-950">{latestOrder.invoice_number}</span>
+                                </div>
+                                <div className="flex items-center justify-between gap-3">
+                                    <span>Status order</span>
+                                    <span className="font-semibold text-stone-950">{latestOrder.status.label}</span>
+                                </div>
+                                <div className="flex items-center justify-between gap-3">
+                                    <span>Total</span>
+                                    <span className="font-semibold text-stone-950">{latestOrder.total_amount}</span>
+                                </div>
+                                <div className="flex items-center justify-between gap-3">
+                                    <span>Potensi poin</span>
+                                    <span className="font-semibold text-stone-950">{latestOrder.potential_points.toLocaleString('id-ID')}</span>
+                                </div>
+                            </div>
+                        ) : (
+                            <p className="mt-5 text-sm leading-6 text-stone-500">Belum ada order. Mulai buat order pertama supaya progres reseller bisa tercatat.</p>
+                        )}
                     </div>
-                    <Link href={create.url()} className="mt-6 inline-flex w-full justify-center rounded-2xl bg-kunyit-500 px-5 py-3 text-sm font-bold text-gojamu-950 shadow-sm shadow-kunyit-100">
-                        Buat Order Baru →
-                    </Link>
-                </article>
-            </section>
+                </section>
+
+                <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <p className="text-sm font-semibold text-stone-950">Riwayat order terakhir</p>
+                            <p className="mt-1 text-sm text-stone-500">Tiga order terbaru yang tercatat di akun reseller ini.</p>
+                        </div>
+                        <Link
+                            className="inline-flex items-center justify-center rounded-full bg-stone-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-stone-800"
+                            href={create.url()}
+                        >
+                            Buat Order Baru →
+                        </Link>
+                    </div>
+
+                    <div className="mt-6 divide-y divide-stone-100">
+                        {recentOrders.length > 0 ? (
+                            recentOrders.map((order) => (
+                                <div key={order.id} className="grid gap-3 py-4 text-sm md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr] md:items-center">
+                                    <div>
+                                        <p className="font-semibold text-stone-950">{order.invoice_number}</p>
+                                        <p className="text-stone-500">{order.ordered_at}</p>
+                                    </div>
+                                    <p className="text-stone-600">{order.status.label}</p>
+                                    <p className="text-stone-600">{order.total_qty.toLocaleString('id-ID')} pcs</p>
+                                    <p className="font-semibold text-stone-950 md:text-right">{order.total_amount}</p>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="py-6 text-sm text-stone-500">Belum ada riwayat order.</p>
+                        )}
+                    </div>
+                </section>
+            </div>
         </ResellerLayout>
     );
 }

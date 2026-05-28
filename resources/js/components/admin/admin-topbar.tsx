@@ -1,6 +1,5 @@
-import type { User } from '@/types';
-
 import { Button } from '@/components/ui/button';
+import type { User } from '@/types';
 
 type AdminTopbarProps = {
     eyebrow: string;

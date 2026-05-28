@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\UserStatus;
+use App\Models\Reseller;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
@@ -53,6 +54,7 @@ test('active reseller is redirected to reseller dashboard and cannot access admi
         'email' => 'reseller@gojamu.test',
         'password' => 'password',
     ]);
+    Reseller::factory()->for($reseller)->create();
 
     postWithCsrf(route('login.store'), [
         'email' => $reseller->email,

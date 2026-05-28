@@ -1,9 +1,12 @@
 import { Head } from '@inertiajs/react';
 
-import { QuickActionsCard, type QuickActionItem } from '@/components/admin/dashboard/quick-actions-card';
-import { RecentOrdersTable, type RecentOrder } from '@/components/admin/dashboard/recent-orders-table';
-import { StatCard, type DashboardMetricTone } from '@/components/admin/dashboard/stat-card';
-import { StockCard, type StockItem } from '@/components/admin/dashboard/stock-card';
+import { QuickActionsCard } from '@/components/admin/dashboard/quick-actions-card';
+import type { QuickActionItem } from '@/components/admin/dashboard/quick-actions-card';
+import { RecentOrdersTable } from '@/components/admin/dashboard/recent-orders-table';
+import type { RecentOrder } from '@/components/admin/dashboard/recent-orders-table';
+import { StatCard } from '@/components/admin/dashboard/stat-card';
+import type { DashboardMetricTone } from '@/components/admin/dashboard/stat-card';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import AdminLayout from '@/layouts/admin-layout';
 
 type DashboardMetric = {
@@ -13,52 +16,88 @@ type DashboardMetric = {
     value: string;
 };
 
-const metrics: DashboardMetric[] = [
-    { helper: '+8 dari kemarin', label: 'Order hari ini', tone: 'gojamu', value: '24' },
-    { helper: 'Manual payment', label: 'Omzet bulan ini', tone: 'kunyit', value: '48,2 jt' },
-    { helper: 'Butuh verifikasi', label: 'Pending payment', tone: 'mahakunir', value: '5' },
-    { helper: 'Reward reseller', label: 'Redeem pending', tone: 'nirlawa', value: '3' },
-];
+type OperationSummaryItem = {
+    description: string;
+    label: string;
+    value: string;
+};
 
-const recentOrders: RecentOrder[] = [
-    { invoice: 'INV-00024', quantity: '75 pcs', reseller: 'Reseller Bandung', status: 'paid' },
-    { invoice: 'INV-00023', quantity: '40 pcs', reseller: 'Reseller Solo', status: 'processing' },
-    { invoice: 'INV-00022', quantity: '120 pcs', reseller: 'Reseller Jakarta', status: 'shipped' },
-    { invoice: 'INV-00021', quantity: '12 pcs', reseller: 'Reseller Depok', status: 'pending' },
-];
-
-const stockItems: StockItem[] = [
-    { name: 'Mahakunir', percent: 82, stock: '312 pcs', tone: 'mahakunir' },
-    { name: 'Nirlawa', percent: 56, stock: '87 pcs', tone: 'nirlawa' },
-    { name: 'Ko Gan Ti', percent: 24, stock: '24 pcs', tone: 'kunyit' },
-];
+type AdminDashboardProps = {
+    metrics: DashboardMetric[];
+    operationSummary: OperationSummaryItem[];
+    recentOrders: RecentOrder[];
+};
 
 const quickActions: QuickActionItem[] = [
-    { description: 'Cocokkan mutasi dan tutup transaksi yang sudah masuk.', label: 'Verifikasi Bayar', tone: 'kunyit' },
-    { description: 'Siapkan dokumen pengiriman untuk order yang sudah final.', label: 'Cetak Invoice', tone: 'gojamu' },
-    { description: 'Input nomor resi agar reseller bisa pantau pengiriman.', label: 'Input Resi', tone: 'nirlawa' },
-    { description: 'Tambah reseller baru tanpa ganggu alur operasional.', label: 'Tambah Reseller', tone: 'mahakunir' },
+    {
+        description: 'Pantau pembayaran manual yang perlu dicek finance.',
+        label: 'Verifikasi payment',
+        tone: 'gojamu',
+    },
+    {
+        description: 'Lihat ringkasan penjualan dan ekspor CSV.',
+        label: 'Laporan dasar',
+        tone: 'kunyit',
+    },
+    {
+        description: 'Pastikan order lunas masuk antrean proses.',
+        label: 'Fulfillment',
+        tone: 'mahakunir',
+    },
+    {
+        description: 'Pantau reseller aktif yang siap order.',
+        label: 'Reseller aktif',
+        tone: 'nirlawa',
+    },
 ];
 
-export default function AdminDashboard() {
+export default function AdminDashboard({ metrics, operationSummary, recentOrders }: AdminDashboardProps) {
     return (
-        <AdminLayout title="Dashboard Admin" eyebrow="Ringkasan Operasional">
+        <AdminLayout title="Dashboard Admin">
             <Head title="Dashboard Admin" />
 
-            <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                {metrics.map((metric) => (
-                    <StatCard key={metric.label} {...metric} />
-                ))}
-            </section>
+            <div className="space-y-8">
+                <section>
+                    <p className="text-sm font-semibold uppercase tracking-[0.3em] text-kunyit-600">Admin Command Center</p>
+                    <h1 className="mt-3 text-3xl font-bold text-gojamu-950">Dashboard Admin</h1>
+                    <p className="mt-2 max-w-2xl text-sm text-herbal-600">
+                        Ringkasan order, pembayaran manual, dan aktivitas reseller dari data operasional terbaru.
+                    </p>
+                </section>
 
-            <section className="mt-6 grid gap-4 lg:grid-cols-[1.4fr_0.9fr]">
-                <RecentOrdersTable orders={recentOrders} />
+                <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    {metrics.map((metric) => (
+                        <StatCard key={metric.label} {...metric} />
+                    ))}
+                </section>
 
-                <aside className="space-y-4">
-                    <StockCard items={stockItems} />
-                    <QuickActionsCard actions={quickActions} />
-                </aside>
-            </section>
+                <section className="grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_minmax(320px,0.8fr)]">
+                    <RecentOrdersTable orders={recentOrders} />
+
+                    <Card className="p-6">
+                        <CardHeader className="px-0 pt-0">
+                            <CardTitle>Ringkasan Operasional</CardTitle>
+                            <CardDescription>Prioritas kerja tim hari ini berdasarkan status order dan pembayaran.</CardDescription>
+                        </CardHeader>
+
+                        <div className="space-y-3">
+                            {operationSummary.map((item) => (
+                                <div key={item.label} className="rounded-3xl border border-herbal-100 bg-herbal-50/70 p-4">
+                                    <div className="flex items-start justify-between gap-4">
+                                        <div>
+                                            <p className="text-sm font-semibold text-gojamu-950">{item.label}</p>
+                                            <p className="mt-1 text-xs leading-5 text-herbal-600">{item.description}</p>
+                                        </div>
+                                        <p className="text-2xl font-bold text-kunyit-700">{item.value}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </Card>
+                </section>
+
+                <QuickActionsCard actions={quickActions} />
+            </div>
         </AdminLayout>
     );
 }

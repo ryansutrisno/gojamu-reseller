@@ -3,8 +3,8 @@ import { Link } from '@inertiajs/react';
 import type { User } from '@/types';
 
 import { AdminNavGroup } from './admin-nav-group';
-import type { AdminNavGroup as AdminNavGroupData } from './navigation';
 import { AdminUserCard } from './admin-user-card';
+import type { AdminNavGroup as AdminNavGroupData } from './navigation';
 
 type AdminSidebarProps = {
     groups: AdminNavGroupData[];

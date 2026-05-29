@@ -3,6 +3,10 @@
 use App\Enums\UserRole;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PaymentVerificationController as AdminPaymentVerificationController;
+use App\Http\Controllers\Admin\PriceTierController as AdminPriceTierController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\ResellerController as AdminResellerController;
+use App\Http\Controllers\Admin\RewardController as AdminRewardController;
 use App\Http\Controllers\Admin\RewardRedemptionController as AdminRewardRedemptionController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Reseller\OrderController as ResellerOrderController;
@@ -74,6 +78,20 @@ Route::middleware('auth')->group(function (): void {
             Route::post('/reward-redemptions/{rewardRedemption}/reject', [AdminRewardRedemptionController::class, 'reject'])->name('reward-redemptions.reject');
             Route::post('/reward-redemptions/{rewardRedemption}/process', [AdminRewardRedemptionController::class, 'process'])->name('reward-redemptions.process');
             Route::post('/reward-redemptions/{rewardRedemption}/complete', [AdminRewardRedemptionController::class, 'complete'])->name('reward-redemptions.complete');
+
+            Route::resource('resellers', AdminResellerController::class);
+            Route::post('/resellers/{reseller}/reset-password', [AdminResellerController::class, 'resetPassword'])->name('resellers.reset-password');
+            Route::resource('products', AdminProductController::class)->except(['show']);
+            Route::resource('price-tiers', AdminPriceTierController::class)->except(['show', 'create', 'edit']);
+            Route::resource('rewards', AdminRewardController::class);
+        });
+
+        Route::middleware('role:'.implode(',', [
+            UserRole::SuperAdmin->value,
+            UserRole::Admin->value,
+            UserRole::Warehouse->value,
+        ]))->group(function (): void {
+            Route::post('/products/{product}/adjust-stock', [AdminProductController::class, 'adjustStock'])->name('products.adjust-stock');
         });
     });
 

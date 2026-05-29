@@ -1,3 +1,10 @@
+## [1.6.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.5.0...v1.6.0) (2026-05-29)
+
+
+### ✨ Features
+
+* implement and refine admin and reseller dashboards ([b4c19c2](https://github.com/ryansutrisno/gojamu-reseller/commit/b4c19c27be50a7fa7a736091cdbe6203ec1d7d3a))
+
 ## [1.5.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.4.0...v1.5.0) (2026-05-27)
 
 

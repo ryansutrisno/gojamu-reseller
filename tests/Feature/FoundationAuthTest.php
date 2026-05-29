@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\UserStatus;
+use App\Models\Reseller;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
@@ -49,17 +50,18 @@ test('active admin can login and access admin dashboard', function () {
 });
 
 test('active reseller is redirected to reseller dashboard and cannot access admin dashboard', function () {
-    $reseller = User::factory()->reseller()->create([
+    $user = User::factory()->reseller()->create([
         'email' => 'reseller@gojamu.test',
         'password' => 'password',
     ]);
+    Reseller::factory()->for($user)->create();
 
     postWithCsrf(route('login.store'), [
-        'email' => $reseller->email,
+        'email' => $user->email,
         'password' => 'password',
     ])->assertRedirect(route('reseller.dashboard', absolute: false));
 
-    $this->assertAuthenticatedAs($reseller);
+    $this->assertAuthenticatedAs($user);
 
     $this->get(route('reseller.dashboard'))
         ->assertOk();

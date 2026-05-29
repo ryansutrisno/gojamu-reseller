@@ -1,14 +1,17 @@
 import { Head } from '@inertiajs/react';
 
-import { QuickActionsCard  } from '@/components/admin/dashboard/quick-actions-card';
-import type {QuickActionItem} from '@/components/admin/dashboard/quick-actions-card';
-import { RecentOrdersTable  } from '@/components/admin/dashboard/recent-orders-table';
-import type {RecentOrder} from '@/components/admin/dashboard/recent-orders-table';
-import { StatCard  } from '@/components/admin/dashboard/stat-card';
-import type {DashboardMetricTone} from '@/components/admin/dashboard/stat-card';
-import { StockCard  } from '@/components/admin/dashboard/stock-card';
-import type {StockItem} from '@/components/admin/dashboard/stock-card';
+import { QuickActionsCard } from '@/components/admin/dashboard/quick-actions-card';
+import type { QuickActionItem } from '@/components/admin/dashboard/quick-actions-card';
+import { RecentOrdersTable } from '@/components/admin/dashboard/recent-orders-table';
+import type { RecentOrder } from '@/components/admin/dashboard/recent-orders-table';
+import { StatCard } from '@/components/admin/dashboard/stat-card';
+import type { DashboardMetricTone } from '@/components/admin/dashboard/stat-card';
+import { StockCard } from '@/components/admin/dashboard/stock-card';
+import type { StockItem } from '@/components/admin/dashboard/stock-card';
+import { Card, CardTitle } from '@/components/ui/card';
 import AdminLayout from '@/layouts/admin-layout';
+import { index as adminOrdersIndex } from '@/routes/admin/orders';
+import { index as rewardRedemptionsIndex } from '@/routes/admin/reward-redemptions';
 
 type DashboardMetric = {
     helper: string;
@@ -17,49 +20,144 @@ type DashboardMetric = {
     value: string;
 };
 
-const metrics: DashboardMetric[] = [
-    { helper: '+8 dari kemarin', label: 'Order hari ini', tone: 'gojamu', value: '24' },
-    { helper: 'Manual payment', label: 'Omzet bulan ini', tone: 'kunyit', value: '48,2 jt' },
-    { helper: 'Butuh verifikasi', label: 'Pending payment', tone: 'mahakunir', value: '5' },
-    { helper: 'Reward reseller', label: 'Redeem pending', tone: 'nirlawa', value: '3' },
-];
+type StatMetricData = {
+    value: string;
+    helper: string;
+};
 
-const recentOrders: RecentOrder[] = [
-    { invoice: 'INV-00024', quantity: '75 pcs', reseller: 'Reseller Bandung', status: 'paid' },
-    { invoice: 'INV-00023', quantity: '40 pcs', reseller: 'Reseller Solo', status: 'processing' },
-    { invoice: 'INV-00022', quantity: '120 pcs', reseller: 'Reseller Jakarta', status: 'shipped' },
-    { invoice: 'INV-00021', quantity: '12 pcs', reseller: 'Reseller Depok', status: 'pending' },
-];
+type TopResellerData = {
+    initials: string;
+    name: string;
+    points: string;
+};
 
-const stockItems: StockItem[] = [
-    { name: 'Mahakunir', percent: 82, stock: '312 pcs', tone: 'mahakunir' },
-    { name: 'Nirlawa', percent: 56, stock: '87 pcs', tone: 'nirlawa' },
-    { name: 'Ko Gan Ti', percent: 24, stock: '24 pcs', tone: 'kunyit' },
-];
+type AdminDashboardProps = {
+    metrics: {
+        orders_today: StatMetricData;
+        omzet_month: StatMetricData;
+        pending_payment: StatMetricData;
+        redeem_pending: StatMetricData;
+    };
+    recent_orders: RecentOrder[];
+    stock_items: StockItem[];
+    top_resellers: TopResellerData[];
+};
 
-const quickActions: QuickActionItem[] = [
-    { description: 'Cocokkan mutasi dan tutup transaksi yang sudah masuk.', label: 'Verifikasi Bayar', tone: 'kunyit' },
-    { description: 'Siapkan dokumen pengiriman untuk order yang sudah final.', label: 'Cetak Invoice', tone: 'gojamu' },
-    { description: 'Input nomor resi agar reseller bisa pantau pengiriman.', label: 'Input Resi', tone: 'nirlawa' },
-    { description: 'Tambah reseller baru tanpa ganggu alur operasional.', label: 'Tambah Reseller', tone: 'mahakunir' },
-];
+export function TopResellersCard({ items }: { items: TopResellerData[] }) {
+    return (
+        <Card className="p-5">
+            <p className="text-sm font-semibold tracking-[0.18em] text-kunyit-500 uppercase">
+                Klasemen
+            </p>
+            <CardTitle className="mt-1 text-xl text-gojamu-950">
+                Top reseller (point)
+            </CardTitle>
 
-export default function AdminDashboard() {
+            <ul className="mt-5 space-y-3" role="list">
+                {items.map((item) => (
+                    <li
+                        key={item.name}
+                        className="flex items-center justify-between gap-4 border-b border-herbal-50 py-2 last:border-0 last:pb-0"
+                    >
+                        <div className="flex min-w-0 items-center gap-3">
+                            <div className="grid size-8 place-items-center rounded-2xl bg-gojamu-50 text-sm font-bold text-gojamu-700">
+                                {item.initials}
+                            </div>
+                            <span className="truncate font-bold text-herbal-700">
+                                {item.name}
+                            </span>
+                        </div>
+                        <span className="shrink-0 rounded-full bg-kunyit-100 px-3 py-1 text-xs font-black text-kunyit-900">
+                            {item.points}
+                        </span>
+                    </li>
+                ))}
+                {items.length === 0 ? (
+                    <li className="py-2 text-sm text-herbal-500">
+                        Belum ada data reseller.
+                    </li>
+                ) : null}
+            </ul>
+        </Card>
+    );
+}
+
+export default function AdminDashboard({
+    metrics,
+    recent_orders,
+    stock_items,
+    top_resellers,
+}: AdminDashboardProps) {
+    const dashboardMetrics: DashboardMetric[] = [
+        {
+            helper: metrics.orders_today.helper,
+            label: 'Order hari ini',
+            tone: 'gojamu',
+            value: metrics.orders_today.value,
+        },
+        {
+            helper: metrics.omzet_month.helper,
+            label: 'Omzet bulan ini',
+            tone: 'kunyit',
+            value: metrics.omzet_month.value,
+        },
+        {
+            helper: metrics.pending_payment.helper,
+            label: 'Pending payment',
+            tone: 'mahakunir',
+            value: metrics.pending_payment.value,
+        },
+        {
+            helper: metrics.redeem_pending.helper,
+            label: 'Redeem pending',
+            tone: 'nirlawa',
+            value: metrics.redeem_pending.value,
+        },
+    ];
+
+    const quickActions: QuickActionItem[] = [
+        {
+            description: `${metrics.pending_payment.value} bukti menunggu.`,
+            label: 'Verifikasi Bayar',
+            tone: 'kunyit',
+            href: adminOrdersIndex.url(),
+        },
+        {
+            description: 'Order Paid siap cetak dokumen.',
+            label: 'Cetak Invoice',
+            tone: 'gojamu',
+            href: adminOrdersIndex.url(),
+        },
+        {
+            description: 'Input nomor resi untuk pengiriman.',
+            label: 'Input Resi',
+            tone: 'nirlawa',
+            href: adminOrdersIndex.url(),
+        },
+        {
+            description: `${metrics.redeem_pending.value} redeem menunggu.`,
+            label: 'Redeem Reward',
+            tone: 'mahakunir',
+            href: rewardRedemptionsIndex.url(),
+        },
+    ];
+
     return (
         <AdminLayout title="Dashboard Admin" eyebrow="Ringkasan Operasional">
             <Head title="Dashboard Admin" />
 
             <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                {metrics.map((metric) => (
+                {dashboardMetrics.map((metric) => (
                     <StatCard key={metric.label} {...metric} />
                 ))}
             </section>
 
             <section className="mt-6 grid gap-4 lg:grid-cols-[1.4fr_0.9fr]">
-                <RecentOrdersTable orders={recentOrders} />
+                <RecentOrdersTable orders={recent_orders} />
 
                 <aside className="space-y-4">
-                    <StockCard items={stockItems} />
+                    <StockCard items={stock_items} />
+                    <TopResellersCard items={top_resellers} />
                     <QuickActionsCard actions={quickActions} />
                 </aside>
             </section>

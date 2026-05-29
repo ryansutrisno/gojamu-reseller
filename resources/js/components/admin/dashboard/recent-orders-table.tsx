@@ -1,5 +1,4 @@
 import { Link } from '@inertiajs/react';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import {
     Table,

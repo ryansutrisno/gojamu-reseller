@@ -1,4 +1,9 @@
-export type UserRole = 'super_admin' | 'admin' | 'warehouse' | 'finance' | 'reseller';
+export type UserRole =
+    | 'super_admin'
+    | 'admin'
+    | 'warehouse'
+    | 'finance'
+    | 'reseller';
 
 export type UserStatus = 'active' | 'inactive';
 

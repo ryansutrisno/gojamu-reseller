@@ -2,7 +2,10 @@ import { Badge } from '@/components/ui/badge';
 
 export type OrderStatus = 'paid' | 'pending' | 'processing' | 'shipped';
 
-const statusBadgeConfig: Record<OrderStatus, { label: string; tone: 'success' | 'warning' | 'info' | 'neutral' }> = {
+const statusBadgeConfig: Record<
+    OrderStatus,
+    { label: string; tone: 'success' | 'warning' | 'info' | 'neutral' }
+> = {
     paid: { label: 'Lunas', tone: 'success' },
     pending: { label: 'Tertunda', tone: 'neutral' },
     processing: { label: 'Diproses', tone: 'warning' },

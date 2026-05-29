@@ -18,7 +18,9 @@ export type StatCardProps = {
 
 export function StatCard({ helper, label, tone, value }: StatCardProps) {
     return (
-        <Card className={["border-t-4 p-5", statCardToneClasses[tone]].join(' ')}>
+        <Card
+            className={['border-t-4 p-5', statCardToneClasses[tone]].join(' ')}
+        >
             <p className="text-sm font-semibold text-herbal-500">{label}</p>
             <p className="mt-3 text-3xl font-bold text-gojamu-950">{value}</p>
             <p className="mt-2 text-xs font-medium text-herbal-500">{helper}</p>

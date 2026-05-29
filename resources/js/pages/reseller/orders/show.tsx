@@ -1,6 +1,7 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 
 import ResellerLayout from '@/layouts/reseller-layout';
+import { dashboard } from '@/routes/reseller';
 import { create, index } from '@/routes/reseller/orders';
 import { store as storePaymentProof } from '@/routes/reseller/orders/payment-proof';
 
@@ -122,18 +123,11 @@ function statusTone(status: string): string {
 }
 
 export default function OrdersShow({ order }: OrdersShowProps) {
-    const {
-        data,
-        setData,
-        post,
-        processing,
-        progress,
-        errors,
-        reset,
-    } = useForm<{ proof: File | null; notes: string }>({
-        notes: '',
-        proof: null,
-    });
+    const { data, setData, post, processing, progress, errors, reset } =
+        useForm<{ proof: File | null; notes: string }>({
+            notes: '',
+            proof: null,
+        });
 
     const submitProof = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -152,12 +146,23 @@ export default function OrdersShow({ order }: OrdersShowProps) {
             <section className="rounded-[2rem] bg-white p-5 shadow-sm ring-1 ring-gojamu-100">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div>
-                        <Link
-                            className="text-sm font-semibold text-gojamu-600 hover:text-gojamu-700"
-                            href={index.url()}
-                        >
-                            ← Kembali ke order
-                        </Link>
+                        <div className="flex flex-wrap items-center gap-2 text-xs font-bold tracking-[0.16em] uppercase">
+                            <Link
+                                href={dashboard.url()}
+                                className="text-gojamu-700 hover:text-gojamu-950"
+                            >
+                                Dashboard
+                            </Link>
+                            <span className="text-gojamu-300">/</span>
+                            <Link
+                                href={index.url()}
+                                className="text-gojamu-700 hover:text-gojamu-950"
+                            >
+                                Order Saya
+                            </Link>
+                            <span className="text-gojamu-300">/</span>
+                            <span className="text-gojamu-400">Detail</span>
+                        </div>
                         <h1 className="mt-2 text-2xl font-bold text-slate-950">
                             {order.invoice_number}
                         </h1>
@@ -166,7 +171,7 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                         </p>
                     </div>
                     <Link
-                        className="rounded-full bg-gojamu-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-gojamu-200 transition hover:bg-gojamu-700"
+                        className="hover:bg-kunyit-400 rounded-2xl bg-kunyit-500 px-5 py-3 text-sm font-bold text-gojamu-950 shadow-sm shadow-kunyit-100 transition"
                         href={create.url()}
                     >
                         Buat Order Lagi
@@ -176,7 +181,7 @@ export default function OrdersShow({ order }: OrdersShowProps) {
 
             <section className="mt-5 grid gap-4 md:grid-cols-3">
                 <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-gojamu-100">
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                    <p className="text-xs font-semibold tracking-[0.2em] text-slate-400 uppercase">
                         Status
                     </p>
                     <p className="mt-2 text-lg font-bold text-slate-950">
@@ -184,19 +189,21 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                     </p>
                 </div>
                 <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-gojamu-100">
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                    <p className="text-xs font-semibold tracking-[0.2em] text-slate-400 uppercase">
                         Pembayaran
                     </p>
                     <p className="mt-2 text-lg font-bold text-slate-950">
-                        {order.payment?.status_label ?? order.payment_status.replace('_', ' ')}
+                        {order.payment?.status_label ??
+                            order.payment_status.replace('_', ' ')}
                     </p>
                 </div>
                 <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-gojamu-100">
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                    <p className="text-xs font-semibold tracking-[0.2em] text-slate-400 uppercase">
                         Pengiriman
                     </p>
                     <p className="mt-2 text-lg font-bold text-slate-950">
-                        {order.shipment?.status_label ?? order.shipment_status.replace('_', ' ')}
+                        {order.shipment?.status_label ??
+                            order.shipment_status.replace('_', ' ')}
                     </p>
                 </div>
             </section>
@@ -204,7 +211,9 @@ export default function OrdersShow({ order }: OrdersShowProps) {
             <section className="mt-5 grid gap-5 lg:grid-cols-[1.4fr_0.8fr]">
                 <div className="space-y-5">
                     <div className="rounded-[2rem] bg-white p-5 shadow-sm ring-1 ring-gojamu-100">
-                        <h2 className="text-lg font-bold text-slate-950">Item Order</h2>
+                        <h2 className="text-lg font-bold text-slate-950">
+                            Item Order
+                        </h2>
                         <div className="mt-4 divide-y divide-slate-100">
                             {order.items.map((item) => (
                                 <div
@@ -216,7 +225,9 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                                             {item.product_name}
                                         </p>
                                         <p className="text-sm text-slate-500">
-                                            {item.variant_name ?? 'Varian default'} · {item.sku}
+                                            {item.variant_name ??
+                                                'Varian default'}{' '}
+                                            · {item.sku}
                                         </p>
                                         <p className="text-xs text-slate-400">
                                             {item.weight_gram} gram/pcs
@@ -227,7 +238,10 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                                             {item.qty} pcs
                                         </p>
                                         <p className="text-sm text-slate-500">
-                                            {currency.format(item.price_per_pcs)} / pcs
+                                            {currency.format(
+                                                item.price_per_pcs,
+                                            )}{' '}
+                                            / pcs
                                         </p>
                                         <p className="text-sm font-semibold text-gojamu-700">
                                             {currency.format(item.subtotal)}
@@ -241,39 +255,43 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                     <div className="rounded-[2rem] bg-white p-5 shadow-sm ring-1 ring-gojamu-100">
                         <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gojamu-600">
+                                <p className="text-gojamu-600 text-xs font-semibold tracking-[0.2em] uppercase">
                                     Tracking Pengiriman
                                 </p>
                                 <h2 className="mt-1 text-lg font-bold text-slate-950">
                                     Status Paket
                                 </h2>
                                 <p className="mt-1 text-sm text-slate-500">
-                                    Nomor resi akan muncul setelah gudang mengirim pesanan.
+                                    Nomor resi akan muncul setelah gudang
+                                    mengirim pesanan.
                                 </p>
                             </div>
                             <span className="w-fit rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">
-                                {order.shipment?.status_label ?? order.shipment_status.replace('_', ' ')}
+                                {order.shipment?.status_label ??
+                                    order.shipment_status.replace('_', ' ')}
                             </span>
                         </div>
 
                         {order.shipment ? (
                             <div className="mt-4 grid gap-3 rounded-3xl bg-gojamu-50 p-4 text-sm text-slate-700 md:grid-cols-2">
                                 <div>
-                                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                    <p className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
                                         Kurir
                                     </p>
                                     <p className="mt-1 text-xl font-bold text-slate-950">
-                                        {order.shipment.courier ?? '-'} {order.shipment.service ?? ''}
+                                        {order.shipment.courier ?? '-'}{' '}
+                                        {order.shipment.service ?? ''}
                                     </p>
-                                    <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                    <p className="mt-2 text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
                                         Nomor Resi
                                     </p>
-                                    <p className="mt-1 break-all rounded-2xl bg-white px-3 py-2 font-mono text-base font-bold text-gojamu-700 ring-1 ring-gojamu-100">
-                                        {order.shipment.tracking_number ?? 'Belum tersedia'}
+                                    <p className="mt-1 rounded-2xl bg-white px-3 py-2 font-mono text-base font-bold break-all text-gojamu-700 ring-1 ring-gojamu-100">
+                                        {order.shipment.tracking_number ??
+                                            'Belum tersedia'}
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                    <p className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
                                         Alamat Penerima
                                     </p>
                                     <p className="mt-1 font-semibold text-slate-950">
@@ -282,18 +300,31 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                                     <p>{order.shipment.recipient_phone}</p>
                                     <p>{order.shipment.recipient_address}</p>
                                     <p>
-                                        {order.shipment.recipient_city}, {order.shipment.recipient_province}{' '}
-                                        {order.shipment.recipient_postal_code ?? ''}
+                                        {order.shipment.recipient_city},{' '}
+                                        {order.shipment.recipient_province}{' '}
+                                        {order.shipment.recipient_postal_code ??
+                                            ''}
                                     </p>
                                     <div className="mt-3 grid gap-2 text-xs text-slate-500 sm:grid-cols-2">
-                                        <p>Dikirim: {formatDate(order.shipment.shipped_at)}</p>
-                                        <p>Diterima: {formatDate(order.shipment.delivered_at)}</p>
+                                        <p>
+                                            Dikirim:{' '}
+                                            {formatDate(
+                                                order.shipment.shipped_at,
+                                            )}
+                                        </p>
+                                        <p>
+                                            Diterima:{' '}
+                                            {formatDate(
+                                                order.shipment.delivered_at,
+                                            )}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                         ) : (
                             <div className="mt-4 rounded-3xl bg-slate-50 p-4 text-sm text-slate-600">
-                                Pesanan belum masuk tahap pengiriman. Tenang Mas Bro, nanti resinya muncul di sini.
+                                Pesanan belum masuk tahap pengiriman. Tenang Mas
+                                Bro, nanti resinya muncul di sini.
                             </div>
                         )}
                     </div>
@@ -301,7 +332,7 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                     <div className="rounded-[2rem] bg-white p-5 shadow-sm ring-1 ring-gojamu-100">
                         <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gojamu-600">
+                                <p className="text-gojamu-600 text-xs font-semibold tracking-[0.2em] uppercase">
                                     Instruksi Pembayaran
                                 </p>
                                 <h2 className="mt-1 text-lg font-bold text-slate-950">
@@ -309,13 +340,15 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                                 </h2>
                             </div>
                             <p className="text-xl font-bold text-gojamu-700">
-                                {currency.format(order.payment_instructions.amount)}
+                                {currency.format(
+                                    order.payment_instructions.amount,
+                                )}
                             </p>
                         </div>
 
                         <div className="mt-4 grid gap-3 rounded-3xl bg-gojamu-50 p-4 text-sm text-slate-700 md:grid-cols-3">
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                <p className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
                                     Bank
                                 </p>
                                 <p className="mt-1 font-bold text-slate-950">
@@ -323,7 +356,7 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                                 </p>
                             </div>
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                <p className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
                                     Nomor Rekening
                                 </p>
                                 <p className="mt-1 font-bold text-slate-950">
@@ -331,7 +364,7 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                                 </p>
                             </div>
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                <p className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
                                     Atas Nama
                                 </p>
                                 <p className="mt-1 font-bold text-slate-950">
@@ -341,14 +374,16 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                         </div>
 
                         <ol className="mt-4 space-y-2 text-sm text-slate-600">
-                            {order.payment_instructions.steps.map((step, index) => (
-                                <li className="flex gap-2" key={step}>
-                                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-gojamu-600 text-xs font-bold text-white">
-                                        {index + 1}
-                                    </span>
-                                    <span>{step}</span>
-                                </li>
-                            ))}
+                            {order.payment_instructions.steps.map(
+                                (step, index) => (
+                                    <li className="flex gap-2" key={step}>
+                                        <span className="bg-gojamu-600 flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white">
+                                            {index + 1}
+                                        </span>
+                                        <span>{step}</span>
+                                    </li>
+                                ),
+                            )}
                         </ol>
                     </div>
 
@@ -359,7 +394,8 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                                     Bukti Pembayaran
                                 </h2>
                                 <p className="text-sm text-slate-500">
-                                    Upload bukti transfer agar tim finance bisa verifikasi.
+                                    Upload bukti transfer agar tim finance bisa
+                                    verifikasi.
                                 </p>
                             </div>
                             {order.latest_payment_proof ? (
@@ -374,7 +410,10 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                         </div>
 
                         {order.can_upload_payment_proof ? (
-                            <form className="mt-4 space-y-4" onSubmit={submitProof}>
+                            <form
+                                className="mt-4 space-y-4"
+                                onSubmit={submitProof}
+                            >
                                 <div>
                                     <label
                                         className="text-sm font-semibold text-slate-700"
@@ -384,11 +423,14 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                                     </label>
                                     <input
                                         accept="image/*,application/pdf"
-                                        className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 file:mr-4 file:rounded-full file:border-0 file:bg-gojamu-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-gojamu-700 focus:border-gojamu-400 focus:outline-none focus:ring-4 focus:ring-gojamu-100"
+                                        className="focus:border-gojamu-400 mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 file:mr-4 file:rounded-full file:border-0 file:bg-gojamu-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-gojamu-700 focus:ring-4 focus:ring-gojamu-100 focus:outline-none"
                                         id="proof"
                                         name="proof"
                                         onChange={(event) =>
-                                            setData('proof', event.target.files?.[0] ?? null)
+                                            setData(
+                                                'proof',
+                                                event.target.files?.[0] ?? null,
+                                            )
                                         }
                                         type="file"
                                     />
@@ -407,9 +449,11 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                                         Catatan opsional
                                     </label>
                                     <textarea
-                                        className="mt-2 min-h-24 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700 focus:border-gojamu-400 focus:outline-none focus:ring-4 focus:ring-gojamu-100"
+                                        className="focus:border-gojamu-400 mt-2 min-h-24 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700 focus:ring-4 focus:ring-gojamu-100 focus:outline-none"
                                         id="notes"
-                                        onChange={(event) => setData('notes', event.target.value)}
+                                        onChange={(event) =>
+                                            setData('notes', event.target.value)
+                                        }
                                         placeholder="Contoh: transfer dari rekening BCA a.n. Ryan"
                                         value={data.notes}
                                     />
@@ -424,8 +468,10 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                                     <div className="space-y-2">
                                         <div className="h-2 overflow-hidden rounded-full bg-slate-100">
                                             <div
-                                                className="h-full rounded-full bg-gojamu-600 transition-all"
-                                                style={{ width: `${progress.percentage ?? 0}%` }}
+                                                className="bg-gojamu-600 h-full rounded-full transition-all"
+                                                style={{
+                                                    width: `${progress.percentage ?? 0}%`,
+                                                }}
                                             />
                                         </div>
                                         <p className="text-xs font-semibold text-slate-500">
@@ -435,16 +481,19 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                                 ) : null}
 
                                 <button
-                                    className="rounded-full bg-gojamu-600 px-5 py-3 text-sm font-bold text-white shadow-sm shadow-gojamu-200 transition hover:bg-gojamu-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                                    className="bg-gojamu-600 shadow-gojamu-200 rounded-full px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-gojamu-700 disabled:cursor-not-allowed disabled:bg-slate-300"
                                     disabled={processing || !data.proof}
                                     type="submit"
                                 >
-                                    {processing ? 'Mengupload...' : 'Upload Bukti Pembayaran'}
+                                    {processing
+                                        ? 'Mengupload...'
+                                        : 'Upload Bukti Pembayaran'}
                                 </button>
                             </form>
                         ) : (
                             <div className="mt-4 rounded-3xl bg-slate-50 p-4 text-sm text-slate-600">
-                                Upload bukti pembayaran tidak tersedia untuk status pembayaran saat ini.
+                                Upload bukti pembayaran tidak tersedia untuk
+                                status pembayaran saat ini.
                             </div>
                         )}
 
@@ -464,8 +513,13 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                                                     {proof.status_label}
                                                 </p>
                                                 <p className="text-sm text-slate-500">
-                                                    Diupload {formatDate(proof.uploaded_at)} oleh{' '}
-                                                    {proof.uploader_name ?? 'Reseller'}
+                                                    Diupload{' '}
+                                                    {formatDate(
+                                                        proof.uploaded_at,
+                                                    )}{' '}
+                                                    oleh{' '}
+                                                    {proof.uploader_name ??
+                                                        'Reseller'}
                                                 </p>
                                             </div>
                                             <span
@@ -477,7 +531,9 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                                             </span>
                                         </div>
                                         {proof.notes ? (
-                                            <p className="mt-3 text-sm text-slate-600">{proof.notes}</p>
+                                            <p className="mt-3 text-sm text-slate-600">
+                                                {proof.notes}
+                                            </p>
                                         ) : null}
                                     </div>
                                 ))}
@@ -492,10 +548,14 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                         <div className="mt-4 space-y-3 text-sm">
                             <div className="flex justify-between">
                                 <span className="text-white/60">Total Qty</span>
-                                <span className="font-semibold">{order.total_qty} pcs</span>
+                                <span className="font-semibold">
+                                    {order.total_qty} pcs
+                                </span>
                             </div>
                             <div className="flex justify-between">
-                                <span className="text-white/60">Harga / pcs</span>
+                                <span className="text-white/60">
+                                    Harga / pcs
+                                </span>
                                 <span className="font-semibold">
                                     {currency.format(order.price_per_pcs)}
                                 </span>
@@ -521,15 +581,18 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                             <div className="border-t border-white/10 pt-3">
                                 <div className="flex justify-between text-lg font-bold">
                                     <span>Total</span>
-                                    <span>{currency.format(order.total_amount)}</span>
+                                    <span>
+                                        {currency.format(order.total_amount)}
+                                    </span>
                                 </div>
                                 <p className="mt-2 text-sm text-white/60">
-                                    Potensi poin: {order.potential_points} · Poin didapat:{' '}
-                                    {order.earned_points}
+                                    Potensi poin: {order.potential_points} ·
+                                    Poin didapat: {order.earned_points}
                                 </p>
                                 {order.completed_at ? (
                                     <p className="mt-1 text-xs text-white/50">
-                                        Selesai: {formatDate(order.completed_at)}
+                                        Selesai:{' '}
+                                        {formatDate(order.completed_at)}
                                     </p>
                                 ) : null}
                             </div>
@@ -537,17 +600,20 @@ export default function OrdersShow({ order }: OrdersShowProps) {
                     </div>
 
                     <div className="rounded-[2rem] bg-white p-5 shadow-sm ring-1 ring-gojamu-100">
-                        <h2 className="text-lg font-bold text-slate-950">Gudang</h2>
+                        <h2 className="text-lg font-bold text-slate-950">
+                            Gudang
+                        </h2>
                         <p className="mt-2 text-sm text-slate-600">
-                            {order.warehouse?.name ?? '-'} ({order.warehouse?.code ?? '-'})
+                            {order.warehouse?.name ?? '-'} (
+                            {order.warehouse?.code ?? '-'})
                         </p>
-                        <p className="mt-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        <p className="mt-4 text-xs font-semibold tracking-[0.2em] text-slate-400 uppercase">
                             Price Tier
                         </p>
                         <p className="mt-1 font-semibold text-slate-950">
                             {order.price_tier?.name ?? '-'}
                         </p>
-                        <p className="mt-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        <p className="mt-4 text-xs font-semibold tracking-[0.2em] text-slate-400 uppercase">
                             Catatan
                         </p>
                         <p className="mt-1 text-sm text-slate-600">

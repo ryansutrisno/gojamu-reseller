@@ -13,10 +13,13 @@ export default function Login() {
                             GoJamu Reseller Management System
                         </div>
                         <h1 className="mt-6 max-w-xl text-5xl font-bold tracking-tight text-gojamu-950">
-                            Operasional reseller herbal lebih rapi, cepat, dan terukur.
+                            Operasional reseller herbal lebih rapi, cepat, dan
+                            terukur.
                         </h1>
                         <p className="mt-5 max-w-lg text-base leading-8 text-herbal-700">
-                            Pantau order, verifikasi pembayaran, kelola pengiriman, dan siapkan pondasi reward point reseller dalam satu portal internal.
+                            Pantau order, verifikasi pembayaran, kelola
+                            pengiriman, dan siapkan pondasi reward point
+                            reseller dalam satu portal internal.
                         </p>
                         <div className="mt-8 grid max-w-xl grid-cols-3 gap-3">
                             {[
@@ -24,9 +27,16 @@ export default function Login() {
                                 ['Point', 'Siap pakai'],
                                 ['Gudang', 'Terarah'],
                             ].map(([label, value]) => (
-                                <div key={label} className="rounded-3xl border border-gojamu-100 bg-white/75 p-4 shadow-sm shadow-gojamu-100/60">
-                                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-herbal-500">{label}</p>
-                                    <p className="mt-2 text-lg font-bold text-gojamu-950">{value}</p>
+                                <div
+                                    key={label}
+                                    className="rounded-3xl border border-gojamu-100 bg-white/75 p-4 shadow-sm shadow-gojamu-100/60"
+                                >
+                                    <p className="text-xs font-semibold tracking-[0.18em] text-herbal-500 uppercase">
+                                        {label}
+                                    </p>
+                                    <p className="mt-2 text-lg font-bold text-gojamu-950">
+                                        {value}
+                                    </p>
                                 </div>
                             ))}
                         </div>
@@ -37,39 +47,64 @@ export default function Login() {
                             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gojamu-950 text-2xl text-kunyit-300 shadow-lg shadow-gojamu-300/30">
                                 🌿
                             </div>
-                            <h2 className="mt-5 text-2xl font-bold text-gojamu-950">Masuk ke GoJamu</h2>
-                            <p className="mt-2 text-sm text-herbal-600">Gunakan akun admin atau reseller yang sudah dibuat.</p>
+                            <h2 className="mt-5 text-2xl font-bold text-gojamu-950">
+                                Masuk ke GoJamu
+                            </h2>
+                            <p className="text-herbal-600 mt-2 text-sm">
+                                Gunakan akun admin atau reseller yang sudah
+                                dibuat.
+                            </p>
                         </div>
 
-                        <Form action={loginStore.url()} className="space-y-5" method="post">
+                        <Form
+                            action={loginStore.url()}
+                            className="space-y-5"
+                            method="post"
+                        >
                             {({ errors, processing }) => (
                                 <>
                                     <label className="block">
-                                        <span className="text-sm font-semibold text-herbal-700">Email</span>
+                                        <span className="text-sm font-semibold text-herbal-700">
+                                            Email
+                                        </span>
                                         <input
                                             name="email"
                                             type="email"
                                             autoComplete="email"
-                                            className="mt-2 w-full rounded-2xl border border-herbal-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-gojamu-500 focus:ring-4 focus:ring-gojamu-100"
+                                            className="mt-2 w-full rounded-2xl border border-herbal-300 bg-white px-4 py-3 text-sm transition outline-none focus:border-gojamu-500 focus:ring-4 focus:ring-gojamu-100"
                                             placeholder="admin@gojamu.test"
                                         />
-                                        {errors.email && <span className="mt-2 block text-sm font-medium text-mahakunir-700">{errors.email}</span>}
+                                        {errors.email && (
+                                            <span className="mt-2 block text-sm font-medium text-mahakunir-700">
+                                                {errors.email}
+                                            </span>
+                                        )}
                                     </label>
 
                                     <label className="block">
-                                        <span className="text-sm font-semibold text-herbal-700">Password</span>
+                                        <span className="text-sm font-semibold text-herbal-700">
+                                            Password
+                                        </span>
                                         <input
                                             name="password"
                                             type="password"
                                             autoComplete="current-password"
-                                            className="mt-2 w-full rounded-2xl border border-herbal-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-gojamu-500 focus:ring-4 focus:ring-gojamu-100"
+                                            className="mt-2 w-full rounded-2xl border border-herbal-300 bg-white px-4 py-3 text-sm transition outline-none focus:border-gojamu-500 focus:ring-4 focus:ring-gojamu-100"
                                             placeholder="••••••••"
                                         />
-                                        {errors.password && <span className="mt-2 block text-sm font-medium text-mahakunir-700">{errors.password}</span>}
+                                        {errors.password && (
+                                            <span className="mt-2 block text-sm font-medium text-mahakunir-700">
+                                                {errors.password}
+                                            </span>
+                                        )}
                                     </label>
 
                                     <label className="flex items-center gap-3 text-sm font-medium text-herbal-700">
-                                        <input name="remember" type="checkbox" className="h-4 w-4 rounded border-herbal-300 text-gojamu-700" />
+                                        <input
+                                            name="remember"
+                                            type="checkbox"
+                                            className="h-4 w-4 rounded border-herbal-300 text-gojamu-700"
+                                        />
                                         Ingat saya
                                     </label>
 
@@ -85,7 +120,9 @@ export default function Login() {
                         </Form>
 
                         <div className="mt-6 rounded-2xl bg-gojamu-50 p-4 text-xs leading-6 text-herbal-700">
-                            <p className="font-bold text-gojamu-950">Akun awal seed:</p>
+                            <p className="font-bold text-gojamu-950">
+                                Akun awal seed:
+                            </p>
                             <p>admin@gojamu.test / password</p>
                             <p>reseller@gojamu.test / password</p>
                         </div>

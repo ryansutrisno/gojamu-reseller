@@ -20,18 +20,23 @@ export function AdminSidebar({ groups, user }: AdminSidebarProps) {
             <Link
                 href="/"
                 aria-label="Beranda GoJamu Reseller"
-                className="flex items-center gap-3 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kunyit-300 focus-visible:ring-offset-2 focus-visible:ring-offset-gojamu-950"
+                className="flex items-center gap-3 rounded-2xl focus-visible:ring-2 focus-visible:ring-kunyit-300 focus-visible:ring-offset-2 focus-visible:ring-offset-gojamu-950 focus-visible:outline-none"
             >
                 <div className="grid size-11 place-items-center rounded-2xl bg-kunyit-500 text-xl shadow-lg shadow-kunyit-900/30">
                     🌿
                 </div>
                 <div>
-                    <p className="text-sm font-semibold tracking-[0.28em] text-gojamu-100 uppercase">GoJamu</p>
-                    <p className="text-lg font-bold leading-tight">Reseller</p>
+                    <p className="text-sm font-semibold tracking-[0.28em] text-gojamu-100 uppercase">
+                        GoJamu
+                    </p>
+                    <p className="text-lg leading-tight font-bold">Reseller</p>
                 </div>
             </Link>
 
-            <nav aria-label="Navigasi admin" className="admin-sidebar-scrollbar mt-10 min-h-0 flex-1 space-y-7 overflow-y-auto overscroll-contain pr-1 [scrollbar-gutter:stable]">
+            <nav
+                aria-label="Navigasi admin"
+                className="admin-sidebar-scrollbar mt-10 min-h-0 flex-1 [scrollbar-gutter:stable] space-y-7 overflow-y-auto overscroll-contain pr-1"
+            >
                 {groups.map((group) => (
                     <AdminNavGroup key={group.label} {...group} />
                 ))}

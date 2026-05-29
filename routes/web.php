@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\UserRole;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PaymentVerificationController as AdminPaymentVerificationController;
 use App\Http\Controllers\Admin\PriceTierController as AdminPriceTierController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Admin\ResellerController as AdminResellerController;
 use App\Http\Controllers\Admin\RewardController as AdminRewardController;
 use App\Http\Controllers\Admin\RewardRedemptionController as AdminRewardRedemptionController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Reseller\DashboardController as ResellerDashboardController;
 use App\Http\Controllers\Reseller\OrderController as ResellerOrderController;
 use App\Http\Controllers\Reseller\PaymentProofController as ResellerPaymentProofController;
 use App\Http\Controllers\Reseller\RewardController as ResellerRewardController;
@@ -16,7 +18,6 @@ use App\Http\Controllers\Reseller\RewardRedemptionController as ResellerRewardRe
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/', function () {
     $user = Auth::user();
@@ -42,9 +43,7 @@ Route::middleware('auth')->group(function (): void {
         UserRole::Warehouse->value,
         UserRole::Finance->value,
     ]))->prefix('admin')->name('admin.')->group(function (): void {
-        Route::get('/dashboard', function () {
-            return Inertia::render('admin/dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', AdminDashboardController::class)->name('dashboard');
 
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
@@ -96,9 +95,7 @@ Route::middleware('auth')->group(function (): void {
     });
 
     Route::middleware('role:'.UserRole::Reseller->value)->prefix('reseller')->name('reseller.')->group(function (): void {
-        Route::get('/dashboard', function () {
-            return Inertia::render('reseller/dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', ResellerDashboardController::class)->name('dashboard');
 
         Route::get('/rewards', [ResellerRewardController::class, 'index'])->name('rewards.index');
         Route::post('/rewards/{reward}/redemptions', [ResellerRewardRedemptionController::class, 'store'])->name('rewards.redemptions.store');

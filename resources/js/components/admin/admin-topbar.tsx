@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import type { User } from '@/types';
 
-
 type AdminTopbarProps = {
     eyebrow: string;
     title: string;
@@ -16,8 +15,12 @@ export function AdminTopbar({ eyebrow, title, user }: AdminTopbarProps) {
         <header className="sticky top-0 z-20 border-b border-gojamu-100 bg-white/85 px-5 py-5 backdrop-blur md:px-6 lg:px-8">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div className="min-w-0">
-                    <p className="text-xs font-bold uppercase tracking-[0.24em] text-gojamu-700">{eyebrow}</p>
-                    <h1 className="mt-1 text-2xl font-black text-gojamu-950 md:text-3xl">{title}</h1>
+                    <p className="text-xs font-bold tracking-[0.24em] text-gojamu-700 uppercase">
+                        {eyebrow}
+                    </p>
+                    <h1 className="mt-1 text-2xl font-black text-gojamu-950 md:text-3xl">
+                        {title}
+                    </h1>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -40,7 +43,10 @@ export function AdminTopbar({ eyebrow, title, user }: AdminTopbarProps) {
                         🔔
                     </Button>
 
-                    <div className="grid size-10 place-items-center rounded-full bg-gojamu-700 font-bold text-white" title={displayName}>
+                    <div
+                        className="grid size-10 place-items-center rounded-full bg-gojamu-700 font-bold text-white"
+                        title={displayName}
+                    >
                         {initial}
                     </div>
                 </div>

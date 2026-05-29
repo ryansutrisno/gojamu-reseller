@@ -1,7 +1,12 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 
 import AdminLayout from '@/layouts/admin-layout';
-import { complete, index, process as processOrder, ship } from '@/routes/admin/orders';
+import {
+    complete,
+    index,
+    process as processOrder,
+    ship,
+} from '@/routes/admin/orders';
 import {
     approve,
     reject,
@@ -127,7 +132,10 @@ function statusTone(status: string): string {
 }
 
 function proofUrl(orderId: number, proof: PaymentProofDetail): string {
-    return proof.view_url ?? showPaymentProof.url({ order: orderId, paymentProof: proof.id });
+    return (
+        proof.view_url ??
+        showPaymentProof.url({ order: orderId, paymentProof: proof.id })
+    );
 }
 
 export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
@@ -150,18 +158,27 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
     const latestProof = order.latest_payment_proof;
 
     const submitApprove = (proof: PaymentProofDetail) => {
-        approveForm.post(approve.url({ order: order.id, paymentProof: proof.id }), {
-            preserveScroll: true,
-        });
+        approveForm.post(
+            approve.url({ order: order.id, paymentProof: proof.id }),
+            {
+                preserveScroll: true,
+            },
+        );
     };
 
-    const submitReject = (event: React.FormEvent<HTMLFormElement>, proof: PaymentProofDetail) => {
+    const submitReject = (
+        event: React.FormEvent<HTMLFormElement>,
+        proof: PaymentProofDetail,
+    ) => {
         event.preventDefault();
 
-        rejectForm.post(reject.url({ order: order.id, paymentProof: proof.id }), {
-            onSuccess: () => rejectForm.reset('reason'),
-            preserveScroll: true,
-        });
+        rejectForm.post(
+            reject.url({ order: order.id, paymentProof: proof.id }),
+            {
+                onSuccess: () => rejectForm.reset('reason'),
+                preserveScroll: true,
+            },
+        );
     };
 
     const submitProcess = () => {
@@ -190,7 +207,7 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
 
             <section className="rounded-3xl border border-gojamu-100 bg-white p-5 shadow-sm">
                 <Link
-                    className="text-sm font-semibold text-gojamu-600 hover:text-gojamu-700"
+                    className="text-gojamu-600 text-sm font-semibold hover:text-gojamu-700"
                     href={index.url()}
                 >
                     ← Kembali ke daftar order
@@ -213,7 +230,8 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                             {order.status_label ?? order.status}
                         </span>
                         <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700">
-                            {order.payment?.status_label ?? order.payment_status}
+                            {order.payment?.status_label ??
+                                order.payment_status}
                         </span>
                         <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">
                             {order.shipment_status}
@@ -225,7 +243,9 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
             <section className="mt-5 grid gap-5 lg:grid-cols-[1.4fr_0.8fr]">
                 <div className="space-y-5">
                     <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
-                        <h2 className="text-lg font-bold text-slate-950">Item Order</h2>
+                        <h2 className="text-lg font-bold text-slate-950">
+                            Item Order
+                        </h2>
                         <div className="mt-4 divide-y divide-slate-100">
                             {order.items.map((item) => (
                                 <div
@@ -237,7 +257,9 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                                             {item.product_name}
                                         </p>
                                         <p className="text-sm text-slate-500">
-                                            {item.variant_name ?? 'Varian default'} · {item.sku}
+                                            {item.variant_name ??
+                                                'Varian default'}{' '}
+                                            · {item.sku}
                                         </p>
                                     </div>
                                     <div className="text-left md:text-right">
@@ -245,7 +267,10 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                                             {item.qty} pcs
                                         </p>
                                         <p className="text-sm text-slate-500">
-                                            {currency.format(item.price_per_pcs)} / pcs
+                                            {currency.format(
+                                                item.price_per_pcs,
+                                            )}{' '}
+                                            / pcs
                                         </p>
                                         <p className="text-sm font-semibold text-gojamu-700">
                                             {currency.format(item.subtotal)}
@@ -259,25 +284,27 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                     <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
                         <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gojamu-600">
+                                <p className="text-gojamu-600 text-xs font-semibold tracking-[0.2em] uppercase">
                                     Fulfillment Gudang
                                 </p>
                                 <h2 className="mt-1 text-lg font-bold text-slate-950">
                                     Pengiriman Manual
                                 </h2>
                                 <p className="mt-1 text-sm text-slate-500">
-                                    Proses order, isi kurir dan resi, lalu selesaikan setelah paket diterima.
+                                    Proses order, isi kurir dan resi, lalu
+                                    selesaikan setelah paket diterima.
                                 </p>
                             </div>
                             <span className="w-fit rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">
-                                {order.shipment?.status_label ?? order.shipment_status}
+                                {order.shipment?.status_label ??
+                                    order.shipment_status}
                             </span>
                         </div>
 
                         {order.shipment ? (
                             <div className="mt-4 grid gap-3 rounded-3xl bg-slate-50 p-4 text-sm text-slate-600 md:grid-cols-2">
                                 <div>
-                                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                    <p className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
                                         Penerima
                                     </p>
                                     <p className="mt-1 font-semibold text-slate-950">
@@ -286,42 +313,71 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                                     <p>{order.shipment.recipient_phone}</p>
                                     <p>{order.shipment.recipient_address}</p>
                                     <p>
-                                        {order.shipment.recipient_city}, {order.shipment.recipient_province}{' '}
-                                        {order.shipment.recipient_postal_code ?? ''}
+                                        {order.shipment.recipient_city},{' '}
+                                        {order.shipment.recipient_province}{' '}
+                                        {order.shipment.recipient_postal_code ??
+                                            ''}
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                    <p className="text-xs font-semibold tracking-[0.18em] text-slate-400 uppercase">
                                         Tracking
                                     </p>
                                     <p className="mt-1 font-semibold text-slate-950">
-                                        {order.shipment.courier ?? '-'} {order.shipment.service ?? ''}
+                                        {order.shipment.courier ?? '-'}{' '}
+                                        {order.shipment.service ?? ''}
                                     </p>
-                                    <p>{order.shipment.tracking_number ?? 'Nomor resi belum diisi.'}</p>
-                                    <p>Ongkir: {currency.format(order.shipment.shipping_cost)}</p>
-                                    <p>Dikirim: {formatDate(order.shipment.shipped_at)}</p>
-                                    <p>Diterima: {formatDate(order.shipment.delivered_at)}</p>
+                                    <p>
+                                        {order.shipment.tracking_number ??
+                                            'Nomor resi belum diisi.'}
+                                    </p>
+                                    <p>
+                                        Ongkir:{' '}
+                                        {currency.format(
+                                            order.shipment.shipping_cost,
+                                        )}
+                                    </p>
+                                    <p>
+                                        Dikirim:{' '}
+                                        {formatDate(order.shipment.shipped_at)}
+                                    </p>
+                                    <p>
+                                        Diterima:{' '}
+                                        {formatDate(
+                                            order.shipment.delivered_at,
+                                        )}
+                                    </p>
                                 </div>
                             </div>
                         ) : (
                             <div className="mt-4 rounded-3xl bg-slate-50 p-4 text-sm text-slate-600">
-                                Shipment belum dibuat. Klik proses gudang setelah pembayaran lunas.
+                                Shipment belum dibuat. Klik proses gudang
+                                setelah pembayaran lunas.
                             </div>
                         )}
 
                         <div className="mt-4 grid gap-4 lg:grid-cols-3">
                             <div className="rounded-3xl bg-gojamu-50 p-4 ring-1 ring-gojamu-100">
-                                <p className="text-sm font-semibold text-slate-950">1. Proses gudang</p>
+                                <p className="text-sm font-semibold text-slate-950">
+                                    1. Proses gudang
+                                </p>
                                 <p className="mt-1 text-sm text-slate-500">
-                                    Tandai order lunas agar masuk antrean packing.
+                                    Tandai order lunas agar masuk antrean
+                                    packing.
                                 </p>
                                 <button
-                                    className="mt-3 rounded-full bg-gojamu-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-gojamu-700 disabled:cursor-not-allowed disabled:bg-slate-300"
-                                    disabled={!order.fulfillment_actions.can_process || processForm.processing}
+                                    className="bg-gojamu-600 mt-3 rounded-full px-4 py-2 text-sm font-bold text-white transition hover:bg-gojamu-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                                    disabled={
+                                        !order.fulfillment_actions
+                                            .can_process ||
+                                        processForm.processing
+                                    }
                                     onClick={submitProcess}
                                     type="button"
                                 >
-                                    {processForm.processing ? 'Memproses...' : 'Proses'}
+                                    {processForm.processing
+                                        ? 'Memproses...'
+                                        : 'Proses'}
                                 </button>
                             </div>
 
@@ -329,27 +385,44 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                                 className="rounded-3xl bg-white p-4 ring-1 ring-slate-200"
                                 onSubmit={submitShip}
                             >
-                                <p className="text-sm font-semibold text-slate-950">2. Input resi</p>
+                                <p className="text-sm font-semibold text-slate-950">
+                                    2. Input resi
+                                </p>
                                 <div className="mt-3 space-y-3">
                                     <input
-                                        className="w-full rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-gojamu-400 focus:outline-none focus:ring-4 focus:ring-gojamu-100"
-                                        onChange={(event) => shipForm.setData('courier', event.target.value)}
+                                        className="focus:border-gojamu-400 w-full rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:ring-4 focus:ring-gojamu-100 focus:outline-none"
+                                        onChange={(event) =>
+                                            shipForm.setData(
+                                                'courier',
+                                                event.target.value,
+                                            )
+                                        }
                                         placeholder="Kurir, contoh: JNE"
                                         value={shipForm.data.courier}
                                     />
                                     {shipForm.errors.courier ? (
-                                        <p className="text-sm font-medium text-red-600">{shipForm.errors.courier}</p>
+                                        <p className="text-sm font-medium text-red-600">
+                                            {shipForm.errors.courier}
+                                        </p>
                                     ) : null}
                                     <input
-                                        className="w-full rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-gojamu-400 focus:outline-none focus:ring-4 focus:ring-gojamu-100"
-                                        onChange={(event) => shipForm.setData('service', event.target.value)}
+                                        className="focus:border-gojamu-400 w-full rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:ring-4 focus:ring-gojamu-100 focus:outline-none"
+                                        onChange={(event) =>
+                                            shipForm.setData(
+                                                'service',
+                                                event.target.value,
+                                            )
+                                        }
                                         placeholder="Layanan, contoh: REG"
                                         value={shipForm.data.service}
                                     />
                                     <input
-                                        className="w-full rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-gojamu-400 focus:outline-none focus:ring-4 focus:ring-gojamu-100"
+                                        className="focus:border-gojamu-400 w-full rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:ring-4 focus:ring-gojamu-100 focus:outline-none"
                                         onChange={(event) =>
-                                            shipForm.setData('tracking_number', event.target.value)
+                                            shipForm.setData(
+                                                'tracking_number',
+                                                event.target.value,
+                                            )
                                         }
                                         placeholder="Nomor resi"
                                         value={shipForm.data.tracking_number}
@@ -360,10 +433,13 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                                         </p>
                                     ) : null}
                                     <input
-                                        className="w-full rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-gojamu-400 focus:outline-none focus:ring-4 focus:ring-gojamu-100"
+                                        className="focus:border-gojamu-400 w-full rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:ring-4 focus:ring-gojamu-100 focus:outline-none"
                                         min="0"
                                         onChange={(event) =>
-                                            shipForm.setData('shipping_cost', event.target.value)
+                                            shipForm.setData(
+                                                'shipping_cost',
+                                                event.target.value,
+                                            )
                                         }
                                         placeholder="Ongkir"
                                         type="number"
@@ -377,25 +453,39 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                                 </div>
                                 <button
                                     className="mt-3 rounded-full bg-slate-950 px-4 py-2 text-sm font-bold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
-                                    disabled={!order.fulfillment_actions.can_ship || shipForm.processing}
+                                    disabled={
+                                        !order.fulfillment_actions.can_ship ||
+                                        shipForm.processing
+                                    }
                                     type="submit"
                                 >
-                                    {shipForm.processing ? 'Menyimpan...' : 'Simpan Resi'}
+                                    {shipForm.processing
+                                        ? 'Menyimpan...'
+                                        : 'Simpan Resi'}
                                 </button>
                             </form>
 
                             <div className="rounded-3xl bg-emerald-50 p-4 ring-1 ring-emerald-100">
-                                <p className="text-sm font-semibold text-slate-950">3. Selesaikan</p>
+                                <p className="text-sm font-semibold text-slate-950">
+                                    3. Selesaikan
+                                </p>
                                 <p className="mt-1 text-sm text-slate-500">
-                                    Ubah order menjadi selesai dan berikan poin reseller.
+                                    Ubah order menjadi selesai dan berikan poin
+                                    reseller.
                                 </p>
                                 <button
                                     className="mt-3 rounded-full bg-emerald-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300"
-                                    disabled={!order.fulfillment_actions.can_complete || completeForm.processing}
+                                    disabled={
+                                        !order.fulfillment_actions
+                                            .can_complete ||
+                                        completeForm.processing
+                                    }
                                     onClick={submitComplete}
                                     type="button"
                                 >
-                                    {completeForm.processing ? 'Memproses...' : 'Selesaikan'}
+                                    {completeForm.processing
+                                        ? 'Memproses...'
+                                        : 'Selesaikan'}
                                 </button>
                             </div>
                         </div>
@@ -404,14 +494,15 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                     <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
                         <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gojamu-600">
+                                <p className="text-gojamu-600 text-xs font-semibold tracking-[0.2em] uppercase">
                                     Verifikasi Pembayaran
                                 </p>
                                 <h2 className="mt-1 text-lg font-bold text-slate-950">
                                     Bukti Transfer
                                 </h2>
                                 <p className="mt-1 text-sm text-slate-500">
-                                    Cek bukti transfer sebelum approve atau reject pembayaran.
+                                    Cek bukti transfer sebelum approve atau
+                                    reject pembayaran.
                                 </p>
                             </div>
                             {latestProof ? (
@@ -430,11 +521,17 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                                 <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                                     <div>
                                         <p className="font-semibold text-slate-950">
-                                            Bukti terakhir: {latestProof.status_label}
+                                            Bukti terakhir:{' '}
+                                            {latestProof.status_label}
                                         </p>
                                         <p className="text-sm text-slate-500">
-                                            Diupload {formatDate(latestProof.uploaded_at)} oleh{' '}
-                                            {latestProof.uploader_name ?? 'Reseller'}
+                                            Diupload{' '}
+                                            {formatDate(
+                                                latestProof.uploaded_at,
+                                            )}{' '}
+                                            oleh{' '}
+                                            {latestProof.uploader_name ??
+                                                'Reseller'}
                                         </p>
                                     </div>
                                     <a
@@ -452,7 +549,8 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                                     </p>
                                 ) : null}
 
-                                {latestProof.can_approve || latestProof.can_reject ? (
+                                {latestProof.can_approve ||
+                                latestProof.can_reject ? (
                                     <div className="mt-4 grid gap-4 lg:grid-cols-2">
                                         {latestProof.can_approve ? (
                                             <div className="rounded-3xl bg-white p-4 ring-1 ring-emerald-100">
@@ -460,15 +558,24 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                                                     Approve pembayaran
                                                 </p>
                                                 <p className="mt-1 text-sm text-slate-500">
-                                                    Order akan ditandai lunas dan siap diproses.
+                                                    Order akan ditandai lunas
+                                                    dan siap diproses.
                                                 </p>
                                                 <button
                                                     className="mt-3 rounded-full bg-emerald-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300"
-                                                    disabled={approveForm.processing}
-                                                    onClick={() => submitApprove(latestProof)}
+                                                    disabled={
+                                                        approveForm.processing
+                                                    }
+                                                    onClick={() =>
+                                                        submitApprove(
+                                                            latestProof,
+                                                        )
+                                                    }
                                                     type="button"
                                                 >
-                                                    {approveForm.processing ? 'Memproses...' : 'Approve'}
+                                                    {approveForm.processing
+                                                        ? 'Memproses...'
+                                                        : 'Approve'}
                                                 </button>
                                             </div>
                                         ) : null}
@@ -476,7 +583,12 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                                         {latestProof.can_reject ? (
                                             <form
                                                 className="rounded-3xl bg-white p-4 ring-1 ring-red-100"
-                                                onSubmit={(event) => submitReject(event, latestProof)}
+                                                onSubmit={(event) =>
+                                                    submitReject(
+                                                        event,
+                                                        latestProof,
+                                                    )
+                                                }
                                             >
                                                 <label
                                                     className="text-sm font-semibold text-slate-950"
@@ -485,25 +597,37 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                                                     Reject pembayaran
                                                 </label>
                                                 <textarea
-                                                    className="mt-2 min-h-24 w-full rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-red-300 focus:outline-none focus:ring-4 focus:ring-red-100"
+                                                    className="mt-2 min-h-24 w-full rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-red-300 focus:ring-4 focus:ring-red-100 focus:outline-none"
                                                     id="reason"
                                                     onChange={(event) =>
-                                                        rejectForm.setData('reason', event.target.value)
+                                                        rejectForm.setData(
+                                                            'reason',
+                                                            event.target.value,
+                                                        )
                                                     }
                                                     placeholder="Tulis alasan penolakan untuk reseller"
-                                                    value={rejectForm.data.reason}
+                                                    value={
+                                                        rejectForm.data.reason
+                                                    }
                                                 />
                                                 {rejectForm.errors.reason ? (
                                                     <p className="mt-2 text-sm font-medium text-red-600">
-                                                        {rejectForm.errors.reason}
+                                                        {
+                                                            rejectForm.errors
+                                                                .reason
+                                                        }
                                                     </p>
                                                 ) : null}
                                                 <button
                                                     className="mt-3 rounded-full bg-red-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-slate-300"
-                                                    disabled={rejectForm.processing}
+                                                    disabled={
+                                                        rejectForm.processing
+                                                    }
                                                     type="submit"
                                                 >
-                                                    {rejectForm.processing ? 'Memproses...' : 'Reject'}
+                                                    {rejectForm.processing
+                                                        ? 'Memproses...'
+                                                        : 'Reject'}
                                                 </button>
                                             </form>
                                         ) : null}
@@ -512,7 +636,8 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                             </div>
                         ) : (
                             <div className="mt-4 rounded-3xl bg-slate-50 p-4 text-sm text-slate-600">
-                                Belum ada bukti pembayaran yang diupload reseller.
+                                Belum ada bukti pembayaran yang diupload
+                                reseller.
                             </div>
                         )}
 
@@ -531,8 +656,10 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                                                 {proof.status_label}
                                             </p>
                                             <p className="text-sm text-slate-500">
-                                                {formatDate(proof.uploaded_at)} ·{' '}
-                                                {proof.uploader_name ?? 'Reseller'}
+                                                {formatDate(proof.uploaded_at)}{' '}
+                                                ·{' '}
+                                                {proof.uploader_name ??
+                                                    'Reseller'}
                                             </p>
                                             {proof.notes ? (
                                                 <p className="mt-2 text-sm text-slate-600">
@@ -561,16 +688,21 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                         <div className="flex justify-between">
                             <span className="text-white/60">Gudang</span>
                             <span className="font-semibold">
-                                {order.warehouse?.name ?? '-'} ({order.warehouse?.code ?? '-'})
+                                {order.warehouse?.name ?? '-'} (
+                                {order.warehouse?.code ?? '-'})
                             </span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-white/60">Price Tier</span>
-                            <span className="font-semibold">{order.price_tier?.name ?? '-'}</span>
+                            <span className="font-semibold">
+                                {order.price_tier?.name ?? '-'}
+                            </span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-white/60">Total Qty</span>
-                            <span className="font-semibold">{order.total_qty} pcs</span>
+                            <span className="font-semibold">
+                                {order.total_qty} pcs
+                            </span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-white/60">Harga / pcs</span>
@@ -580,7 +712,9 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                         </div>
                         <div className="flex justify-between">
                             <span className="text-white/60">Subtotal</span>
-                            <span className="font-semibold">{currency.format(order.subtotal)}</span>
+                            <span className="font-semibold">
+                                {currency.format(order.subtotal)}
+                            </span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-white/60">Ongkir</span>
@@ -597,7 +731,9 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                         <div className="border-t border-white/10 pt-3">
                             <div className="flex justify-between text-lg font-bold">
                                 <span>Total</span>
-                                <span>{currency.format(order.total_amount)}</span>
+                                <span>
+                                    {currency.format(order.total_amount)}
+                                </span>
                             </div>
                             <p className="mt-2 text-sm text-white/60">
                                 Potensi poin: {order.potential_points}
@@ -608,10 +744,20 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                     <div className="rounded-3xl bg-white/10 p-4 text-sm text-white/70">
                         <p className="font-semibold text-white">Pembayaran</p>
                         <p className="mt-2">
-                            Status: {order.payment?.status_label ?? order.payment_status}
+                            Status:{' '}
+                            {order.payment?.status_label ??
+                                order.payment_status}
                         </p>
-                        <p>Nominal: {currency.format(order.payment?.amount ?? order.total_amount)}</p>
-                        <p>Diverifikasi: {formatDate(order.payment?.verified_at)}</p>
+                        <p>
+                            Nominal:{' '}
+                            {currency.format(
+                                order.payment?.amount ?? order.total_amount,
+                            )}
+                        </p>
+                        <p>
+                            Diverifikasi:{' '}
+                            {formatDate(order.payment?.verified_at)}
+                        </p>
                         <p>Oleh: {order.payment?.verifier_name ?? '-'}</p>
                         {order.payment?.rejected_reason ? (
                             <p className="mt-2 text-red-200">
@@ -621,8 +767,12 @@ export default function AdminOrdersShow({ order }: AdminOrdersShowProps) {
                     </div>
 
                     <div className="rounded-3xl bg-white/10 p-4 text-sm text-white/70">
-                        <p className="font-semibold text-white">Catatan Reseller</p>
-                        <p className="mt-2">{order.reseller_notes ?? 'Tidak ada catatan.'}</p>
+                        <p className="font-semibold text-white">
+                            Catatan Reseller
+                        </p>
+                        <p className="mt-2">
+                            {order.reseller_notes ?? 'Tidak ada catatan.'}
+                        </p>
                     </div>
                 </aside>
             </section>

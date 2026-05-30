@@ -28,17 +28,7 @@ export default function AdminRewardsCreate() {
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         
-        // Clean up empty fields before submitting
-        const payload = {
-            ...data,
-            stock: data.stock === '' ? null : data.stock,
-            start_date: data.start_date || null,
-            end_date: data.end_date || null,
-        };
-
-        // We can pass data directly using useForm post, but since useForm handles 'data' internal state,
-        // let's temporarily set it or let the controller handle empty strings appropriately.
-        // Wait, standard practice in Laravel is to convert empty strings to null via ConvertEmptyStringsToNull middleware,
+        // Standard practice in Laravel is to convert empty strings to null via ConvertEmptyStringsToNull middleware,
         // which runs by default on Laravel applications! So we can submit data as-is.
         post('/admin/rewards');
     }

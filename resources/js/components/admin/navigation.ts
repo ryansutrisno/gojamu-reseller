@@ -54,6 +54,38 @@ const baseAdminNavigationGroups: AdminNavGroup[] = [
             },
         ],
     },
+    {
+        label: 'Master Data',
+        items: [
+            {
+                activePattern: '/admin/resellers',
+                allowedRoles: programAdminRoles,
+                href: '/admin/resellers',
+                label: 'Reseller',
+            },
+            {
+                activePattern: '/admin/products',
+                allowedRoles: [
+                    ...programAdminRoles,
+                    'warehouse',
+                ] as UserRole[],
+                href: '/admin/products',
+                label: 'Produk',
+            },
+            {
+                activePattern: '/admin/price-tiers',
+                allowedRoles: programAdminRoles,
+                href: '/admin/price-tiers',
+                label: 'Tier Harga',
+            },
+            {
+                activePattern: '/admin/rewards',
+                allowedRoles: programAdminRoles,
+                href: '/admin/rewards',
+                label: 'Reward',
+            },
+        ],
+    },
 ];
 
 const normalizeUrl = (url: string) =>

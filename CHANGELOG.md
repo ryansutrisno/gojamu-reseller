@@ -1,3 +1,15 @@
+## [1.7.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.6.0...v1.7.0) (2026-05-30)
+
+
+### ✨ Features
+
+* implement master data and settings CRUD operations ([23cd475](https://github.com/ryansutrisno/gojamu-reseller/commit/23cd475412f6d8433fa8f9b1a4fa36a62e769373))
+
+
+### 🐛 Bug Fixes
+
+* **rewards-create:** remove unused payload variable to resolve TypeScript unused var error ([551a43c](https://github.com/ryansutrisno/gojamu-reseller/commit/551a43c346744e9139f496945cdd21e29839eec3))
+
 ## [1.6.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.5.0...v1.6.0) (2026-05-29)
 
 

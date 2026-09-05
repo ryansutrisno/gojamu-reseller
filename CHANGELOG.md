@@ -1,3 +1,10 @@
+## [1.8.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.7.0...v1.8.0) (2026-09-05)
+
+
+### ✨ Features
+
+* **docker:** add complete docker setup for laravel application ([fe6eba5](https://github.com/ryansutrisno/gojamu-reseller/commit/fe6eba57520fbfa9fab5dd8c19385e2dbdc520e5))
+
 ## [1.7.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.6.0...v1.7.0) (2026-05-30)
 
 

@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.8.1...v1.8.2) (2026-09-13)
+
+
+### 🐛 Bug Fixes
+
+* use relative redirect for logout to ensure redirect to login works behind proxy ([ad58236](https://github.com/ryansutrisno/gojamu-reseller/commit/ad5823639d19742b1421340f0454c68eaed0cf5e))
+
 ## [1.8.1](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.8.0...v1.8.1) (2026-09-13)
 
 

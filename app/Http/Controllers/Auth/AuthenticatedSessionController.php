@@ -50,7 +50,7 @@ class AuthenticatedSessionController extends Controller
             ]);
         }
 
-        return redirect()->intended(route($user->dashboardRouteName(), absolute: false));
+        return redirect(route($user->dashboardRouteName(), absolute: false));
     }
 
     public function destroy(Request $request): RedirectResponse

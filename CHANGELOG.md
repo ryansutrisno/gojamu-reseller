@@ -1,3 +1,10 @@
+## [1.8.3](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.8.2...v1.8.3) (2026-09-13)
+
+
+### ♻️ Refactoring
+
+* standardize redirect handling ([d3bcfb7](https://github.com/ryansutrisno/gojamu-reseller/commit/d3bcfb71d17fa7470190ef0ff60a1e6cef340d7f))
+
 ## [1.8.2](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.8.1...v1.8.2) (2026-09-13)
 
 

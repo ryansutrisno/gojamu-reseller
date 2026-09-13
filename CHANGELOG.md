@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.8.0...v1.8.1) (2026-09-13)
+
+
+### 🐛 Bug Fixes
+
+* trust proxies to fix HTTPS URL generation behind Dokploy proxy ([0b3cd9e](https://github.com/ryansutrisno/gojamu-reseller/commit/0b3cd9e840ade6bd503d1efca132e5c20d4378df))
+
 ## [1.8.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.7.0...v1.8.0) (2026-09-05)
 
 

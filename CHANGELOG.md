@@ -1,3 +1,16 @@
+## [1.8.4](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.8.3...v1.8.4) (2026-09-15)
+
+
+### 🐛 Bug Fixes
+
+* **deploy:** align docker build with reproducible multi-stage setup ([f54e034](https://github.com/ryansutrisno/gojamu-reseller/commit/f54e0345163beea7db087233c75033bd37cb83b8))
+* **http:** drop unsupported absolute argument from redirect()->route() calls ([dc7ac4a](https://github.com/ryansutrisno/gojamu-reseller/commit/dc7ac4ac62e2dd93d51fe550a108bbcbe1f1dffd))
+
+
+### 🔧 Maintenance
+
+* **docs:** sync laravel boost guidelines ([34afc38](https://github.com/ryansutrisno/gojamu-reseller/commit/34afc384198d7ada44b840cd39687d70a7fa8d4f))
+
 ## [1.8.3](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.8.2...v1.8.3) (2026-09-13)
 
 

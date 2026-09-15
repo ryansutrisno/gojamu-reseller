@@ -23,10 +23,10 @@ Route::get('/', function () {
     $user = Auth::user();
 
     if (! $user instanceof User) {
-        return redirect()->route('login', absolute: false);
+        return redirect()->route('login');
     }
 
-    return redirect()->route($user->dashboardRouteName(), absolute: false);
+    return redirect()->route($user->dashboardRouteName());
 })->name('home');
 
 Route::middleware('guest')->group(function (): void {

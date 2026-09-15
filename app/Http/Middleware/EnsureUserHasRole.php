@@ -19,7 +19,7 @@ class EnsureUserHasRole
         $user = $request->user();
 
         if (! $user) {
-            return redirect()->route('login', absolute: false);
+            return redirect()->route('login');
         }
 
         if (! $user->isActive()) {

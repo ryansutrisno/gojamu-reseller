@@ -1,3 +1,10 @@
+## [1.9.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.8.4...v1.9.0) (2026-09-15)
+
+
+### ✨ Features
+
+* **auth/login:** add one-click demo account auto-fill ([3b2f88b](https://github.com/ryansutrisno/gojamu-reseller/commit/3b2f88bb6970acc791b262dc20c1741f844512a5))
+
 ## [1.8.4](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.8.3...v1.8.4) (2026-09-15)
 
 

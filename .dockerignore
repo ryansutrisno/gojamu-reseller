@@ -9,6 +9,13 @@ storage/framework/cache/data/*
 storage/framework/sessions/*
 storage/framework/views/*
 storage/logs/*
+bootstrap/cache/*.php
+public/build
+public/hot
+resources/js/actions
+resources/js/routes
+resources/js/wayfinder
 tests
 docker-compose*.yml
+.serena
 .DS_Store

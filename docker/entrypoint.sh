@@ -1,16 +1,22 @@
 #!/bin/sh
 set -e
 
-# Run migrations at startup
-echo "Running migrations..."
-php artisan migrate --force
+# Create storage symbolic link
+echo "Linking storage..."
+php artisan storage:link || true
 
-# Cache config, routes, and views
-echo "Caching Laravel configuration..."
+# Run migrations if enabled
+if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
+    echo "Running database migrations..."
+    php artisan migrate --force
+fi
+
+# Optimize Laravel cache for production
+echo "Caching Laravel configuration, routes, views, and events..."
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 php artisan event:cache
 
-# Execute the container's main command
+# Execute main command (e.g. supervisord)
 exec "$@"

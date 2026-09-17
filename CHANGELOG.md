@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.9.0...v1.9.1) (2026-09-17)
+
+
+### 🐛 Bug Fixes
+
+* **ui:** use Gojamu Reseller System as app name fallback ([f6b1056](https://github.com/ryansutrisno/gojamu-reseller/commit/f6b105643f0883d26d28cecfdc00413c50fd0fd4))
+
 ## [1.9.0](https://github.com/ryansutrisno/gojamu-reseller/compare/v1.8.4...v1.9.0) (2026-09-15)
 
 
